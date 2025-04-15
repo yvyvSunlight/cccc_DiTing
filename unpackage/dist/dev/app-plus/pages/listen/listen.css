@@ -1,0 +1,173 @@
+
+.timer[data-v-eada39e3] {
+    text-align: center;
+    padding: 1.25rem;
+    width: 100%;
+}
+.time[data-v-eada39e3] {
+    font-size: 3.75rem;
+    margin: 1.25rem 0;
+}
+.controls uni-button[data-v-eada39e3] {
+    margin: 0 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+}
+  
+*[data-v-b45d1da1] {
+  padding: 0;
+  margin: 0;
+}
+.bg[data-v-b45d1da1] {
+  background-color: #E8E4FF;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.bg .prompt[data-v-b45d1da1] {
+  position: absolute;
+  width: 16.25rem;
+  height: 10.625rem;
+  background: linear-gradient(179.8deg, rgba(181, 136, 240, 0.1) 0.18%, rgba(225, 208, 247, 0.1) 22.57%, rgba(255, 255, 255, 0.1) 47.43%);
+  box-shadow: inset 0px 0px 0.125rem rgba(181, 136, 240, 0.7), inset 0px 0.0625rem 0.0625rem rgba(181, 136, 240, 0.5), inset 0px 0px 0.9375rem rgba(181, 136, 240, 0.2), inset 0px 0.9375rem 1.875rem rgba(181, 136, 240, 0.2);
+  -webkit-backdrop-filter: blur(0.9375rem);
+          backdrop-filter: blur(0.9375rem);
+  border-radius: 1.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.bg .prompt .title[data-v-b45d1da1] {
+  font-size: 1.625rem;
+}
+.bg .timeCounter[data-v-b45d1da1] {
+  margin-top: 3.125rem;
+}
+.bg .outborder[data-v-b45d1da1] {
+  height: 8.59375rem;
+  width: 8.59375rem;
+  border-radius: 50%;
+  border: 0.78125rem solid rgba(41, 37, 65, 0.1);
+  /* 设置边框宽度和颜色 */
+  background-color: transparent;
+  /* 设置背景为透明 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bg .outborder .inborder[data-v-b45d1da1] {
+  height: 8.53125rem;
+  /* 贴合 outborder 的内边界 */
+  width: 8.53125rem;
+  border-radius: 50%;
+  border: 0.03125rem solid #9747FF;
+  /* 紫色边框 */
+  background-color: transparent;
+  /* 设置背景为透明 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 0.625rem #9747FF, inset 0 0 1.25rem #A763FF, inset 0 0 1.875rem #B47AFF;
+  /* 向内的紫色荧光效果 */
+  animation: glow-b45d1da1 2s infinite;
+  /* 动态荧光效果 */
+}
+.bg .outborder .inborder .voiceTube[data-v-b45d1da1] {
+  height: 3.125rem;
+}
+.bg .bingo[data-v-b45d1da1] {
+  width: 3.3125rem;
+  height: 3.3125rem;
+  margin-left: 16.25rem;
+}
+.wave-container[data-v-b45d1da1] {
+  position: relative;
+  width: 100%;
+  height: 18.75rem;
+  /* 容器高度适应细线 */
+  overflow: hidden;
+}
+.wave-container #wave1[data-v-b45d1da1] {
+  width: 200%;
+  height: 100%;
+  --c: #A865FF52;
+  --w1: radial-gradient(100% 58% at top, #0000 100%, var(--c) 100.5%, #0000 140%) no-repeat;
+  --w2: radial-gradient(100% 57% at bottom, #0000 60%, var(--c) 99.5%, #0000 100%) no-repeat;
+  background: var(--w1), var(--w2), var(--w1), var(--w2);
+  background-position-x: -200%, -100%, 0%, 100%;
+  background-position-y: 100%;
+  background-size: 50% 100%;
+  animation: m-b45d1da1 1.2s infinite linear;
+}
+.wave-container #wave2[data-v-b45d1da1] {
+  position: absolute;
+  top: 0;
+  width: 160%;
+  /* 调整宽度，波浪更紧凑 */
+  height: 100%;
+  --c: #9747FF30;
+  /* 使用不同的颜色 */
+  --w1: radial-gradient(80% 64% at top, #0000 100%, var(--c) 100.5%, #0000 110%) no-repeat;
+  --w2: radial-gradient(80% 64% at bottom, #0000 90%, var(--c) 99.5%, #0000 100%) no-repeat;
+  background: var(--w1), var(--w2), var(--w1), var(--w2);
+  background-position-x: -160%, -80%, 0%, 80%;
+  background-position-y: 100%;
+  background-size: 44.45% 100%;
+  /* 调整背景大小，波浪更密集 */
+  animation: m2-b45d1da1 0.5s infinite linear;
+  /* 调整动画速度 */
+}
+.wave-container #wave3[data-v-b45d1da1] {
+  width: 200%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  --c: #D4B4FEA0;
+  --w1: radial-gradient(100% 58% at top, #0000 100%, var(--c) 100.5%, #0000 130%) no-repeat;
+  --w2: radial-gradient(100% 57% at bottom, #0000 70%, var(--c) 99.5%, #0000 100%) no-repeat;
+  background: var(--w1), var(--w2), var(--w1), var(--w2);
+  background-position-x: -150%, -50%, 50%, 150%;
+  background-position-y: 100%;
+  background-size: 50% 100%;
+  animation: m3-b45d1da1 0.9s infinite linear;
+}
+/* 动态荧光效果 */
+@keyframes glow-b45d1da1 {
+0% {
+    box-shadow: inset 0 0 0.625rem #9747FF, inset 0 0 1.25rem #A763FF, inset 0 0 1.875rem #B47AFF;
+}
+50% {
+    box-shadow: inset 0 0 0.9375rem #B47AFF, inset 0 0 1.5625rem #C490FF, inset 0 0 2.1875rem #C490FF88;
+}
+100% {
+    box-shadow: inset 0 0 0.625rem #9747FF, inset 0 0 1.25rem #A763FF, inset 0 0 1.875rem #B47AFF;
+}
+}
+@keyframes m-b45d1da1 {
+0% {
+    background-position-x: -200%, -100%, 0%, 100%;
+}
+100% {
+    background-position-x: 0%, 100%, 200%, 300%;
+}
+}
+@keyframes m2-b45d1da1 {
+0% {
+    background-position-x: -160%, -80%, 0%, 80%;
+}
+100% {
+    background-position-x: 0%, 80%, 160%, 240%;
+}
+}
+@keyframes m3-b45d1da1 {
+0% {
+    background-position-x: -200%, -100%, 0%, 100%;
+}
+100% {
+    background-position-x: 0%, 100%, 200%, 300%;
+}
+}
