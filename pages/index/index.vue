@@ -5,7 +5,8 @@
 
 	// 引入原生插件
 	const KJDocument = uni.requireNativePlugin('KJ-Document');
-
+    const lemonjkFileSelect = uni.requireNativePlugin('lemonjk-FileSelect');
+	
 	// 定义响应式数据
 	const json = ref('');
 	const path = ref('');
@@ -107,7 +108,7 @@
 			uni.showToast({
 				title: '上传成功',
 				icon: 'success',
-				duration: 2000
+				duration: 1000
 			});
 			uni.navigateTo({
 					url: '/pages/load/load',
@@ -119,7 +120,7 @@
 			uni.showToast({
 				title: '上传失败',
 				icon: 'none',
-				duration: 2000
+				duration: 1000
 			});
 		}
 	}
@@ -151,72 +152,49 @@
 
 
 	const gotoLoadPage = () => {
-		// uni.chooseMedia({
-		// 	mediaType: ['audio'], // 选择音频文件
-		// 	success: (chooseFiles) => {
-		// 		console.log("chooseFiles", chooseFiles);
-		// 			const tempFilePaths = chooseFiles.tempFilePaths;
-		// 			console.log("temFilePaths", tempFilePaths);
-		// 			console.log("temFilePaths[0]", tempFilePaths[0]);
-		// 			// audioStore.setAudioFile(tempFilePaths[0]);
-		// 			uni.uploadFile({
-		// 				url: 'http://10.135.31.242:5000/predict', // 替换为你的上传接口地址
-		// 				filePath: tempFilePaths[0],
-		// 				name: 'audio',
-		// 				success: (res) => {
-		// 					console.log("上传成功", res);
-		// 					console.log(typeof(res))
-		// 					// console.log(JSON.parse(res.data))
-		// 					const responseData = JSON.parse(res.data);
-		// 					console.log("responseData", responseData);
-		// 					console.log(typeof(responseData))
-		// 					console.log(responseData.mfcc)
-		// 					console.log(typeof(responseData.mfcc))
-		// 					console.log(responseData.result)
-		// 					console.log(responseData.score)
-		// 					console.log(responseData.waveform)
-		// 					console.log("------------------------------------------");
-							
-		// 					console.log(typeof(res.data))
-		// 					console.log(res.data.mfcc)
-		// 					console.log(res.data.result)
-							
-		// 					saveFileWithDynamicExtension(tempFilePaths[0]);
-		// 					// console.log(res.json())
-		// 					// console.log(res.data.json().mfcc)
-		// 					// console.log(res.data.json().data)
-							
-		// 					// handleAudio(tempFilePaths[0]);
-		// 				},
-		// 				fail: (err) => {
-		// 					console.error("上传失败：", err);
-		// 				}
-		// 			});
-		// 			// uni.getFileSystemManager().readFile({
-		// 			// 	filePath: tempFilePaths[0],
-		// 			// 	encoding: 'base64',
-		// 			// 	success: (res) => {
-		// 			// 		console.log("res", res);
-		// 			// 		const base64Data = res.data;
-		// 			// 		console.log("base64Data", base64Data);
-		// 			// 		// 这里可以将 base64Data 发送到服务器或进行其他处理
-		// 			// 		handleAudio(base64Data);
-		// 			// 	},
-		// 			// 	fail: (err) => {
-		// 			// 		console.error("读取文件失败：", err);
-		// 			// 	}
-		// 			// });
-		// 			// handleAudio(tempFilePaths[0]);
-		// 		}
-		// })
-		uni.navigateTo({
-			url: '/pages/load/load',
-			animationType: 'slide-in-right', // 设置动画类型为从底部滑入
-			animationDuration: 300 // 设置动画时长为300ms
-		});
+			//4.0.0+ 安卓自定义文件选择器使用及高级筛选器配置示例
+		lemonjkFileSelect.showNativePicker({
+			mimeType: "*/*",
+			// utisType:["public.data"],
+			pathScope: "/Download",
+			navTitle:"文件选择",
+			navTextColor:'#55ff00',
+			navBarBgColor:'#00aaff',  
+			theme:'light',  //auto 跟随系统  light 亮色  dark 暗色 
+			showHideFile:"yes",   //是否显示隐藏的文件和文件夹      
+			filterConfig:{  //对象里配置的属性要同时满足   
+				// fileName:['base.apk','config.txt','配置文件.yaml'],  //属性数组满足其中一项
+				fileSize:String(1*1024*1024),  // 单位：byte(字节)  //属性数组满足其中一项
+				fileExtension:['apk','txt','jpg','mp3','yaml'],  //属性数组满足其中一项 
+			}
+		}, result => {
+			console.log(result);
+			if (!result.code) {
+				uni.showToast({
+					title:result.detail,
+					icon:'success',
+					duration:900
+				})
+				setTimeout(() => {
+					uni.navigateTo({
+						url: '/pages/load/load',
+						animationType: 'slide-in-right', // 设置动画类型为从右部滑入
+						animationDuration: 300 // 设置动画时长为300ms
+					});
+				}, 1000);
+			} else {
+				uni.showToast({
+					title:result.detail,
+					icon:'error',
+					duration:900
+				})
+			}
+			
+		})
 		
 	}
 	const gotoHistoryPage = () => {
+		console.log("go to history page");
 		uni.navigateTo({
 		  url: '/pages/history/history',
 		  animationType: 'slide-in-right', // 设置动画类型为从底部滑入

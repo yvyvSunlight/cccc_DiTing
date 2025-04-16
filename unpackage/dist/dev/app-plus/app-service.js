@@ -1559,8 +1559,8 @@ This will fail in production.`);
     }
   });
   const _imports_0$3 = "/static/amico.svg";
-  const _imports_1$2 = "/static/title.svg";
-  const _imports_2$1 = "/static/headphone.png";
+  const _imports_1$3 = "/static/title.svg";
+  const _imports_2$2 = "/static/headphone.png";
   const _imports_3$1 = "/static/select.png";
   const _imports_4$1 = "/static/document.png";
   const _export_sfc = (sfc, props) => {
@@ -1575,11 +1575,12 @@ This will fail in production.`);
     setup(__props, { expose: __expose }) {
       __expose();
       const KJDocument = requireNativePlugin("KJ-Document");
+      const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
       const json = vue.ref("");
       const path = vue.ref("");
       const open2 = () => {
         KJDocument.openURL((res) => {
-          formatAppLog("log", "at pages/index/index.vue:25", "openURL: " + JSON.stringify(res));
+          formatAppLog("log", "at pages/index/index.vue:26", "openURL: " + JSON.stringify(res));
           json.value = JSON.stringify(res);
           uni.showModal({
             title: "监听到分享的数据",
@@ -1601,10 +1602,10 @@ This will fail in production.`);
           uni.getFileInfo({
             filePath: path.value,
             success: (res2) => {
-              formatAppLog("log", "at pages/index/index.vue:62", "getFileInfo: " + JSON.stringify(res2));
+              formatAppLog("log", "at pages/index/index.vue:63", "getFileInfo: " + JSON.stringify(res2));
             },
             fail: (res2) => {
-              formatAppLog("log", "at pages/index/index.vue:65", "fail: " + JSON.stringify(res2));
+              formatAppLog("log", "at pages/index/index.vue:66", "fail: " + JSON.stringify(res2));
             }
           });
         });
@@ -1614,9 +1615,9 @@ This will fail in production.`);
           isShowUI
           // 默认是 true
         };
-        formatAppLog("log", "at pages/index/index.vue:76", JSON.stringify(dic));
+        formatAppLog("log", "at pages/index/index.vue:77", JSON.stringify(dic));
         KJDocument.setting_ios(dic, (res) => {
-          formatAppLog("log", "at pages/index/index.vue:78", "setting_ios: " + JSON.stringify(res));
+          formatAppLog("log", "at pages/index/index.vue:79", "setting_ios: " + JSON.stringify(res));
         });
       };
       vue.onMounted(() => {
@@ -1627,7 +1628,7 @@ This will fail in production.`);
       });
       const audioStore = useAudioStore();
       const gotoListenPage = () => {
-        formatAppLog("log", "at pages/index/index.vue:95", "click: goto listen page");
+        formatAppLog("log", "at pages/index/index.vue:96", "click: goto listen page");
         uni.navigateTo({
           url: "/pages/listen/listen",
           animationType: "slide-in-right",
@@ -1638,13 +1639,13 @@ This will fail in production.`);
       };
       const handleAudio = async (file) => {
         try {
-          formatAppLog("log", "at pages/index/index.vue:104", "开始上传：", file);
+          formatAppLog("log", "at pages/index/index.vue:105", "开始上传：", file);
           const response = await uploadAudio(file);
-          formatAppLog("log", "at pages/index/index.vue:106", "上传成功：", response);
+          formatAppLog("log", "at pages/index/index.vue:107", "上传成功：", response);
           uni.showToast({
             title: "上传成功",
             icon: "success",
-            duration: 2e3
+            duration: 1e3
           });
           uni.navigateTo({
             url: "/pages/load/load",
@@ -1654,11 +1655,11 @@ This will fail in production.`);
             // 设置动画时长为300ms
           });
         } catch (error) {
-          formatAppLog("error", "at pages/index/index.vue:118", "上传失败：", error);
+          formatAppLog("error", "at pages/index/index.vue:119", "上传失败：", error);
           uni.showToast({
             title: "上传失败",
             icon: "none",
-            duration: 2e3
+            duration: 1e3
           });
         }
       };
@@ -1674,23 +1675,61 @@ This will fail in production.`);
           tempFilePath,
           filePath: savedFilePath,
           success: (res) => {
-            formatAppLog("log", "at pages/index/index.vue:144", "文件已保存到本地:", savedFilePath);
+            formatAppLog("log", "at pages/index/index.vue:145", "文件已保存到本地:", savedFilePath);
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/index/index.vue:147", "文件保存失败：", err);
+            formatAppLog("error", "at pages/index/index.vue:148", "文件保存失败：", err);
           }
         });
       };
       const gotoLoadPage = () => {
-        uni.navigateTo({
-          url: "/pages/load/load",
-          animationType: "slide-in-right",
-          // 设置动画类型为从底部滑入
-          animationDuration: 300
-          // 设置动画时长为300ms
+        lemonjkFileSelect.showNativePicker({
+          mimeType: "*/*",
+          // utisType:["public.data"],
+          pathScope: "/Download",
+          navTitle: "文件选择",
+          navTextColor: "#55ff00",
+          navBarBgColor: "#00aaff",
+          theme: "light",
+          //auto 跟随系统  light 亮色  dark 暗色 
+          showHideFile: "yes",
+          //是否显示隐藏的文件和文件夹      
+          filterConfig: {
+            //对象里配置的属性要同时满足   
+            // fileName:['base.apk','config.txt','配置文件.yaml'],  //属性数组满足其中一项
+            fileSize: String(1 * 1024 * 1024),
+            // 单位：byte(字节)  //属性数组满足其中一项
+            fileExtension: ["apk", "txt", "jpg", "mp3", "yaml"]
+            //属性数组满足其中一项 
+          }
+        }, (result) => {
+          formatAppLog("log", "at pages/index/index.vue:171", result);
+          if (!result.code) {
+            uni.showToast({
+              title: result.detail,
+              icon: "success",
+              duration: 900
+            });
+            setTimeout(() => {
+              uni.navigateTo({
+                url: "/pages/load/load",
+                animationType: "slide-in-right",
+                // 设置动画类型为从右部滑入
+                animationDuration: 300
+                // 设置动画时长为300ms
+              });
+            }, 1e3);
+          } else {
+            uni.showToast({
+              title: result.detail,
+              icon: "error",
+              duration: 900
+            });
+          }
         });
       };
       const gotoHistoryPage = () => {
+        formatAppLog("log", "at pages/index/index.vue:197", "go to history page");
         uni.navigateTo({
           url: "/pages/history/history",
           animationType: "slide-in-right",
@@ -1699,7 +1738,7 @@ This will fail in production.`);
           // 设置动画时长为300ms
         });
       };
-      const __returned__ = { KJDocument, json, path, open: open2, settingIos, audioStore, gotoListenPage, handleAudio, saveFileWithDynamicExtension, gotoLoadPage, gotoHistoryPage, get uploadAudio() {
+      const __returned__ = { KJDocument, lemonjkFileSelect, json, path, open: open2, settingIos, audioStore, gotoListenPage, handleAudio, saveFileWithDynamicExtension, gotoLoadPage, gotoHistoryPage, get uploadAudio() {
         return uploadAudio;
       }, get useAudioStore() {
         return useAudioStore;
@@ -1716,7 +1755,7 @@ This will fail in production.`);
       }),
       vue.createElementVNode("view", { class: "title" }, [
         vue.createElementVNode("image", {
-          src: _imports_1$2,
+          src: _imports_1$3,
           mode: "scaleToFill",
           class: "titleImg"
         })
@@ -1728,7 +1767,7 @@ This will fail in production.`);
         vue.createTextVNode(" 实时监听 "),
         vue.createElementVNode("image", {
           class: "img",
-          src: _imports_2$1
+          src: _imports_2$2
         })
       ]),
       vue.createElementVNode("view", {
@@ -1755,8 +1794,8 @@ This will fail in production.`);
   }
   const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-1cf27b2a"], ["__file", "E:/Code/Project/cccc_DiTing/pages/index/index.vue"]]);
   const _imports_0$2 = "/uni_modules/le-audio/static/get-back.svg";
-  const _imports_1$1 = "/uni_modules/le-audio/static/fast-forward.svg";
-  const _imports_2 = "/uni_modules/le-audio/static/play-list.svg";
+  const _imports_1$2 = "/uni_modules/le-audio/static/fast-forward.svg";
+  const _imports_2$1 = "/uni_modules/le-audio/static/play-list.svg";
   const _imports_3 = "/uni_modules/le-audio/static/last-episode.svg";
   const _imports_4 = "/uni_modules/le-audio/static/suspend.svg";
   const _imports_5 = "/uni_modules/le-audio/static/start.svg";
@@ -2062,7 +2101,7 @@ This will fail in production.`);
         ]),
         vue.createCommentVNode(" 快进15秒 "),
         vue.createElementVNode("image", {
-          src: _imports_1$1,
+          src: _imports_1$2,
           onClick: _cache[3] || (_cache[3] = ($event) => $options.onSeek(15))
         })
       ]),
@@ -2089,7 +2128,7 @@ This will fail in production.`);
         !$props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", { key: 0 })) : vue.createCommentVNode("v-if", true),
         $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", {
           key: 1,
-          src: _imports_2,
+          src: _imports_2$1,
           onClick: _cache[4] || (_cache[4] = (...args) => $options.onOpenList && $options.onOpenList(...args))
         })) : vue.createCommentVNode("v-if", true),
         $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("text", {
@@ -6979,18 +7018,22 @@ ${i3}
   if (typeof block0 === "function")
     block0(_sfc_main$5);
   const __easycom_1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-0ca34aee"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue"]]);
-  const _imports_0$1 = "/static/addBtn.svg";
+  const _imports_0$1 = "/static/mfcc.png";
+  const _imports_1$1 = "/static/freq.png";
+  const _imports_2 = "/static/addBtn.svg";
   const _sfc_main$4 = {
     __name: "load",
     setup(__props, { expose: __expose }) {
       __expose();
       const title = vue.ref("Title");
       const description = vue.ref("description");
+      const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
+      let score = 37.3;
       const chartData = vue.ref({});
       const opts = vue.ref({
         rotate: false,
         rotateLock: false,
-        color: ["#007AFF", "#5856D6", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"],
+        color: ["#5856D6", "#007AFF30", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"],
         padding: [5, 5, 5, 5],
         dataLabel: false,
         enableScroll: false,
@@ -7000,9 +7043,10 @@ ${i3}
           lineHeight: 25
         },
         title: {
-          name: "98",
+          name: `${score}`,
           fontSize: 25,
-          color: "#666666"
+          // fontWeight:700,
+          color: "#261E58"
         },
         subtitle: {
           name: "",
@@ -7011,25 +7055,71 @@ ${i3}
         },
         extra: {
           ring: {
-            ringWidth: 20,
+            ringWidth: 24,
             activeOpacity: 0.5,
             activeRadius: 10,
             offsetAngle: 0,
             labelWidth: 15,
-            border: true,
-            borderWidth: 3,
+            border: false,
+            borderWidth: 1,
             borderColor: "#FFFFFF"
           }
         }
       });
+      const gotoLoadPage = () => {
+        lemonjkFileSelect.showNativePicker({
+          mimeType: "*/*",
+          // utisType:["public.data"],
+          pathScope: "/Download",
+          navTitle: "文件选择",
+          navTextColor: "#55ff00",
+          navBarBgColor: "#00aaff",
+          theme: "light",
+          //auto 跟随系统  light 亮色  dark 暗色 
+          showHideFile: "yes",
+          //是否显示隐藏的文件和文件夹      
+          filterConfig: {
+            //对象里配置的属性要同时满足   
+            // fileName:['base.apk','config.txt','配置文件.yaml'],  //属性数组满足其中一项
+            fileSize: String(1 * 1024 * 1024),
+            // 单位：byte(字节)  //属性数组满足其中一项
+            fileExtension: ["apk", "txt", "jpg", "mp3", "yaml"]
+            //属性数组满足其中一项 
+          }
+        }, (result) => {
+          formatAppLog("log", "at pages/load/load.vue:65", result);
+          if (!result.code) {
+            uni.showToast({
+              title: result.detail,
+              icon: "success",
+              duration: 900
+            });
+            setTimeout(() => {
+              uni.navigateTo({
+                url: "/pages/load/load",
+                animationType: "slide-in-right",
+                // 设置动画类型为从右部滑入
+                animationDuration: 300
+                // 设置动画时长为300ms
+              });
+            }, 1e3);
+          } else {
+            uni.showToast({
+              title: result.detail,
+              icon: "error",
+              duration: 900
+            });
+          }
+        });
+      };
       const getServerData = () => {
         setTimeout(() => {
           const res = {
             series: [
               {
                 data: [
-                  { name: "一班", value: 98, labelShow: false },
-                  { name: "二班", value: 2, labelShow: false }
+                  { name: "一班", value: score, labelShow: false },
+                  { name: "二班", value: 100 - score, labelShow: false }
                 ]
               }
             ]
@@ -7040,7 +7130,11 @@ ${i3}
       vue.onMounted(() => {
         getServerData();
       });
-      const __returned__ = { title, description, chartData, opts, getServerData, ref: vue.ref, onMounted: vue.onMounted };
+      const __returned__ = { title, description, lemonjkFileSelect, get score() {
+        return score;
+      }, set score(v2) {
+        score = v2;
+      }, chartData, opts, gotoLoadPage, getServerData, ref: vue.ref, onMounted: vue.onMounted };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
@@ -7090,16 +7184,35 @@ ${i3}
           }, null, 8, ["opts", "chartData"])
         ]),
         vue.createElementVNode("view", { class: "result" }, [
-          vue.createElementVNode("view", { class: "resultText" }, " 经分析，该音频为虚假音频 "),
+          vue.createElementVNode("view", { class: "resultText" }, [
+            vue.createTextVNode(" 经分析，该音频为 "),
+            vue.createElementVNode("text", { class: "resultBrief" }, " 伪造音频 ")
+          ]),
           vue.createElementVNode("a", {
             href: "",
             class: "resultDetail"
           }, " 点击查看鉴别依据 ")
         ]),
-        vue.createElementVNode("view", { class: "todo" }),
-        vue.createElementVNode("button", { class: "uploadBtn" }, [
+        vue.createElementVNode("view", { class: "todo" }, [
+          vue.createElementVNode("view", { class: "title" }, "音频波形图"),
           vue.createElementVNode("image", {
             src: _imports_0$1,
+            mode: "",
+            class: "mfcc"
+          }),
+          vue.createElementVNode("view", { class: "title" }, "MFCC特征图"),
+          vue.createElementVNode("image", {
+            src: _imports_1$1,
+            mode: "",
+            class: "freq"
+          })
+        ]),
+        vue.createElementVNode("button", {
+          class: "uploadBtn",
+          onClick: $setup.gotoLoadPage
+        }, [
+          vue.createElementVNode("image", {
+            src: _imports_2,
             mode: "",
             class: "addImg"
           })
@@ -7108,53 +7221,159 @@ ${i3}
     ]);
   }
   const PagesLoadLoad = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-f4b8df5c"], ["__file", "E:/Code/Project/cccc_DiTing/pages/load/load.vue"]]);
-  const _sfc_main$3 = {};
-  function _sfc_render$2(_ctx, _cache) {
+  const _sfc_main$3 = {
+    __name: "history",
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const curYear = vue.ref("");
+      const curMonth = vue.ref("");
+      const curDay = vue.ref("");
+      const curDayOfWeek = vue.ref("");
+      const dateBox = vue.ref([]);
+      const activeIndex = vue.ref(27);
+      const toView = vue.ref("");
+      const currentDate = /* @__PURE__ */ new Date();
+      curYear.value = currentDate.getFullYear();
+      curDay.value = currentDate.getDate();
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const up = ["S", "M", "T", "W", "T", "F", "S"];
+      const yearMons = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      curDayOfWeek.value = weekdays[currentDate.getDay()];
+      curMonth.value = yearMons[currentDate.getMonth()];
+      const generateBoxes = () => {
+        for (let i2 = 0; i2 < 28; i2++) {
+          const date = /* @__PURE__ */ new Date();
+          date.setDate(date.getDate() - i2);
+          const tempYear = date.getFullYear();
+          const tempDay = date.getDate().toString().padStart(2, "0");
+          const tempDayOfWeek = weekdays[date.getDay()];
+          const tempMonth = yearMons[date.getMonth()];
+          const tempUp = up[date.getDay() % 7];
+          dateBox.value.push({
+            year: tempYear,
+            month: tempMonth,
+            day: tempDay,
+            up: tempUp,
+            dayOfWeek: tempDayOfWeek
+          });
+        }
+        dateBox.value.reverse();
+      };
+      const selectBox = (box, index) => {
+        activeIndex.value = index;
+        formatAppLog("log", "at pages/history/history.vue:44", "index", index);
+        formatAppLog("log", "at pages/history/history.vue:45", "activeIndex value", activeIndex.value);
+        curDay.value = box.day;
+        curDayOfWeek.value = box.dayOfWeek;
+        curMonth.value = box.month;
+        curYear.value = box.year;
+      };
+      vue.onMounted(() => {
+        generateBoxes();
+        activeIndex.value = 27;
+        toView.value = "box27";
+      });
+      const __returned__ = { curYear, curMonth, curDay, curDayOfWeek, dateBox, activeIndex, toView, currentDate, weekdays, up, yearMons, generateBoxes, selectBox, ref: vue.ref, onMounted: vue.onMounted, computed: vue.computed };
+      Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+      return __returned__;
+    }
+  };
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "bg" }, [
       vue.createElementVNode("view", { class: "dateArea" }, [
         vue.createElementVNode("view", { class: "currentDate" }, [
-          vue.createElementVNode("view", { class: "day" }, "05"),
+          vue.createElementVNode(
+            "view",
+            { class: "day" },
+            vue.toDisplayString($setup.curDay),
+            1
+            /* TEXT */
+          ),
           vue.createElementVNode("view", { class: "more" }, [
-            vue.createElementVNode("view", { class: "inweek" }, "Thu"),
+            vue.createElementVNode(
+              "view",
+              { class: "inweek" },
+              vue.toDisplayString($setup.curDayOfWeek),
+              1
+              /* TEXT */
+            ),
             vue.createElementVNode("view", { class: "moremore" }, [
-              vue.createElementVNode("view", { class: "month" }, "Mar"),
-              vue.createElementVNode("view", { class: "year" }, "2025")
+              vue.createElementVNode(
+                "view",
+                { class: "month" },
+                vue.toDisplayString($setup.curMonth),
+                1
+                /* TEXT */
+              ),
+              vue.createElementVNode(
+                "view",
+                { class: "year" },
+                vue.toDisplayString($setup.curYear),
+                1
+                /* TEXT */
+              )
             ])
           ])
         ]),
-        vue.createElementVNode("view", { class: "label" }, " today ")
+        vue.withDirectives(vue.createElementVNode(
+          "view",
+          { class: "label" },
+          " today ",
+          512
+          /* NEED_PATCH */
+        ), [
+          [vue.vShow, $setup.activeIndex === 27]
+        ])
       ]),
       vue.createElementVNode("view", { class: "main" }, [
-        vue.createElementVNode("view", { class: "dateBar" }, [
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "S"),
-            vue.createElementVNode("view", { class: "down" }, "02")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "M"),
-            vue.createElementVNode("view", { class: "down" }, "03")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "T"),
-            vue.createElementVNode("view", { class: "down" }, "04")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "W"),
-            vue.createElementVNode("view", { class: "down" }, "05")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "T"),
-            vue.createElementVNode("view", { class: "down" }, "06")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "F"),
-            vue.createElementVNode("view", { class: "down" }, "07")
-          ]),
-          vue.createElementVNode("view", { class: "oneDate" }, [
-            vue.createElementVNode("view", { class: "up" }, "S"),
-            vue.createElementVNode("view", { class: "down" }, "08")
-          ])
-        ]),
+        vue.createElementVNode("scroll-view", {
+          "enable-flex": "",
+          "scroll-x": "",
+          class: "dateBar",
+          ref: "scrollContainer",
+          "scroll-into-view": $setup.toView
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($setup.dateBox, (box, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "oneDateOuter",
+                key: index,
+                id: "box" + index,
+                onClick: ($event) => $setup.selectBox(box, index)
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  {
+                    class: vue.normalizeClass(["oneDate", { "active": index === $setup.activeIndex }])
+                  },
+                  [
+                    vue.createElementVNode(
+                      "view",
+                      { class: "up" },
+                      vue.toDisplayString(box.up),
+                      1
+                      /* TEXT */
+                    ),
+                    vue.createElementVNode(
+                      "view",
+                      { class: "down" },
+                      vue.toDisplayString(box.day),
+                      1
+                      /* TEXT */
+                    )
+                  ],
+                  2
+                  /* CLASS */
+                )
+              ], 8, ["id", "onClick"]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          )),
+          vue.createElementVNode("view", { class: "whiteSpace" })
+        ], 8, ["scroll-into-view"]),
         vue.createElementVNode("view", { class: "promptArea" }, [
           vue.createElementVNode("view", { class: "prompt1" }, "时间"),
           vue.createElementVNode("view", { class: "prompt2" }, "监测记录")
@@ -7206,8 +7425,12 @@ ${i3}
   const PagesHistoryHistory = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-b2d018fa"], ["__file", "E:/Code/Project/cccc_DiTing/pages/history/history.vue"]]);
   const _sfc_main$2 = {
     __name: "TimeCounter",
+    props: {
+      isPaused: Boolean
+    },
     setup(__props, { expose: __expose }) {
       __expose();
+      const props = __props;
       const isRunning = vue.ref(false);
       const elapsedTime = vue.ref(0);
       let intervalId = null;
@@ -7234,6 +7457,13 @@ ${i3}
         clearInterval(intervalId);
         elapsedTime.value = 0;
       };
+      vue.watch(() => props.isPaused, (newVal) => {
+        if (newVal) {
+          pauseTimer();
+        } else {
+          startTimer();
+        }
+      });
       vue.onMounted(() => {
         startTimer();
       });
@@ -7242,11 +7472,11 @@ ${i3}
           clearInterval(intervalId);
         };
       });
-      const __returned__ = { isRunning, elapsedTime, get intervalId() {
+      const __returned__ = { props, isRunning, elapsedTime, get intervalId() {
         return intervalId;
       }, set intervalId(v2) {
         intervalId = v2;
-      }, formatTime, startTimer, pauseTimer, resetTimer, ref: vue.ref, onMounted: vue.onMounted, onUnmounted: vue.onUnmounted };
+      }, formatTime, startTimer, pauseTimer, resetTimer, ref: vue.ref, onMounted: vue.onMounted, onUnmounted: vue.onUnmounted, watch: vue.watch };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
@@ -7269,6 +7499,7 @@ ${i3}
     __name: "listen",
     setup(__props, { expose: __expose }) {
       __expose();
+      const isPaused = vue.ref(false);
       const promptDisplay = vue.ref(false);
       const recorderManager = uni.getRecorderManager();
       const innerAudioContext2 = uni.createInnerAudioContext();
@@ -7276,6 +7507,7 @@ ${i3}
         recorderManager.start();
       };
       const endRecord = () => {
+        isPaused.value = true;
         recorderManager.stop();
         promptDisplay.value = true;
       };
@@ -7291,7 +7523,7 @@ ${i3}
           // 设置动画时长为300ms
         });
       };
-      const __returned__ = { promptDisplay, recorderManager, innerAudioContext: innerAudioContext2, startRecord, endRecord, gotoLoadPage, onMounted: vue.onMounted, ref: vue.ref, TimeCounterVue };
+      const __returned__ = { isPaused, promptDisplay, recorderManager, innerAudioContext: innerAudioContext2, startRecord, endRecord, gotoLoadPage, onMounted: vue.onMounted, ref: vue.ref, TimeCounterVue };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
@@ -7313,7 +7545,10 @@ ${i3}
       ), [
         [vue.vShow, $setup.promptDisplay]
       ]),
-      vue.createVNode($setup["TimeCounterVue"], { class: "timeCounter" }),
+      vue.createVNode($setup["TimeCounterVue"], {
+        class: "timeCounter",
+        isPaused: $setup.isPaused
+      }, null, 8, ["isPaused"]),
       vue.createElementVNode("view", { class: "outborder" }, [
         vue.createElementVNode("view", { class: "inborder" }, [
           vue.createElementVNode("image", {

@@ -1,54 +1,96 @@
 <script setup>
+	import { ref, onMounted, computed } from 'vue';
+	const curYear = ref('');
+	const curMonth = ref('');
+	const curDay = ref('');
+	const curDayOfWeek = ref('');
+	const dateBox = ref([])
+	const activeIndex = ref(27);
+	const toView = ref('')
+	// 获取当前日期
+	const currentDate = new Date();
+	// 获取年份
+	curYear.value = currentDate.getFullYear();
+	// 获取日期
+	curDay.value = currentDate.getDate();
+	// 获取星期几
+	const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	const up = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+	const yearMons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	curDayOfWeek.value = weekdays[currentDate.getDay()];
+	curMonth.value = yearMons[currentDate.getMonth()];
+	const generateBoxes = () => {
+		for (let i = 0; i < 28; i++)
+		{
+			const date = new Date();
+			date.setDate(date.getDate() - i);
+			const tempYear = date.getFullYear();
+			const tempDay = date.getDate().toString().padStart(2, '0');
+			const tempDayOfWeek = weekdays[date.getDay()];
+			const tempMonth = yearMons[date.getMonth()];
+			const tempUp = up[date.getDay() % 7];
+			dateBox.value.push({
+				year: tempYear,
+				month: tempMonth,
+				day: tempDay,
+				up: tempUp,
+				dayOfWeek: tempDayOfWeek
+			})
+		}
+		dateBox.value.reverse();
+	}
+	const selectBox = (box, index) => {
+		activeIndex.value = index;
+		console.log("index", index);
+		console.log("activeIndex value", activeIndex.value)
+		curDay.value = box.day;
+		curDayOfWeek.value = box.dayOfWeek;
+		curMonth.value = box.month;
+		curYear.value = box.year;
+		// toView.value = 'box' + index;
+	}
+
+	onMounted(() => {
+		generateBoxes();
+		activeIndex.value = 27; // 默认选中第28个元素
+		toView.value = 'box27'
+	})
+		
 </script>
 
 <template>
 	<view class="bg">
 		<view class="dateArea">
 			<view class="currentDate">
-				<view class="day">05</view>
+				<view class="day">{{ curDay }}</view>
 				<view class="more">
-					<view class="inweek">Thu</view>
+					<view class="inweek">{{ curDayOfWeek }}</view>
 					<view class="moremore">
-						<view class="month">Mar</view>
-						<view class="year">2025</view>
+						<view class="month">{{curMonth}}</view>
+						<view class="year">{{curYear}}</view>
 					</view>
 				</view>		
 			</view>
-			<view class="label">
+			<view class="label" v-show="activeIndex === 27">
 				today
 			</view>
 		</view>
 		<view class="main">
-			<view class="dateBar">
-				<view class="oneDate">
-					<view class="up">S</view>
-					<view class="down">02</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">M</view>
-					<view class="down">03</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">T</view>
-					<view class="down">04</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">W</view>
-					<view class="down">05</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">T</view>
-					<view class="down">06</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">F</view>
-					<view class="down">07</view>
-				</view>
-				<view class="oneDate">
-					<view class="up">S</view>
-					<view class="down">08</view>
-				</view>
-			</view>
+			<scroll-view enable-flex scroll-x  class="dateBar" ref="scrollContainer" :scroll-into-view="toView">
+				<view class="oneDateOuter" v-for="(box, index) in dateBox"
+					:key="index"
+					:id="'box'+index"
+					@tap="selectBox(box, index)">
+
+					<view class="oneDate"
+					:class="{'active':index === activeIndex }"
+					>
+						<view class="up">{{ box.up }}</view>
+						<view class="down">{{ box.day }}</view>
+					</view>
+				</view>				
+				<view class="whiteSpace"></view>
+			</scroll-view>
 			<view class="promptArea">
 				<view class="prompt1">时间</view>
 				<view class="prompt2">监测记录</view>
@@ -115,7 +157,7 @@
 	height: 100vh;
 	background-color: #E8E4FF;
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	flex-direction: column;
 	justify-content: space-between;
 	.dateArea {
@@ -172,24 +214,53 @@
 	.main {
 		position: relative;
 		width: 100%;
-		height: 1300rpx;
+		height: 1280rpx;
 		background-color: white;
 		border-radius: 80rpx 80rpx 0 0;
+		padding-top: 20rpx;
+		overflow: hidden;
 		.dateBar{
 			width: 100vw;
 			display: flex;
-			.oneDate{
-				width: 102rpx;
-				height: 130rpx;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				border-radius: 24rpx;
-				.up {
-					color: #D9D9D9;
+			white-space: nowrap;
+			// flex-wrap: wrap;
+			// padding-right: 80rpx;
+			// margin: 2rpx 0;
+			// overflow-y: hidden;
+			// overflow-x: scroll;
+			// scroll-snap-align: end;
+			// scroll-into-view: right;
+			height: 140rpx;
+			.oneDateOuter{
+				display: inline-block;
+				.oneDate{
+					box-sizing: border-box;
+					width: 102rpx;
+					height: 110rpx;
+					padding: 0 25rpx;
+					margin: 0 10rpx;
+					margin-right: 10rpx;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					border-radius: 24rpx;
+					.up {
+						color: #D9D9D9;
+					}
+				}
+				.oneDate.active {
+					background-color: #B0A4FD;
+					color: white;
+					.up {
+						color:white;
+					}
 				}
 			}
+			.whiteSpace {
+					height: 120rpx;
+					width: 30rpx;
+				}
 		}
 		.promptArea{
 			display: flex;

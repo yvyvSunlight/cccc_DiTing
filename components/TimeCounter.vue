@@ -5,8 +5,12 @@
   </template>
   
   <script setup>
-  import { ref, onMounted, onUnmounted } from 'vue';
+  import { ref, onMounted, onUnmounted, watch } from 'vue';
   
+  const props = defineProps({
+    isPaused: Boolean
+  })
+
   const isRunning = ref(false); // 是否正在计时
   const elapsedTime = ref(0); // 已耗时（以毫秒为单位）
   let intervalId = null; // setInterval的ID
@@ -41,6 +45,15 @@
     clearInterval(intervalId); // 清除计时器
     elapsedTime.value = 0; // 将已耗时设置为0
   };
+
+  watch(() => props.isPaused, (newVal) => {
+    if(newVal) {
+      pauseTimer();
+    } else {
+      startTimer();
+    }
+  })
+
 
   onMounted(() => {
     startTimer(); // 组件挂载时自动启动计时器

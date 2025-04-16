@@ -1,6 +1,7 @@
 <script setup>
 	import { onMounted, ref } from 'vue';
 	import TimeCounterVue from '../../components/TimeCounter.vue';
+    const isPaused = ref(false);
 	const promptDisplay = ref(false);
 	const recorderManager = uni.getRecorderManager()
 	const innerAudioContext = uni.createInnerAudioContext()
@@ -8,8 +9,9 @@
 		recorderManager.start()
 	}
 	const endRecord = () => {
-		recorderManager.stop()
-		promptDisplay.value = true
+        isPaused.value = true;
+		recorderManager.stop();
+		promptDisplay.value = true;
 	}
 	onMounted(() => {
 		startRecord()
@@ -31,7 +33,7 @@
 			<view class="title">录音成功!</view>
 			<a class='link' @click="gotoLoadPage">点击查看详情</a>
 		</view>
-		<TimeCounterVue class="timeCounter"></TimeCounterVue>
+		<TimeCounterVue class="timeCounter" :isPaused="isPaused"></TimeCounterVue>
 		<view class="outborder">
 			<view class="inborder">
 				<image src="/static/voiceTube.svg" mode="" class="voiceTube"></image>

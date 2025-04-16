@@ -696,6 +696,9 @@ to {
   font-size: 1.125rem;
   color: #261E58;
 }
+.bg .main .result .resultText .resultBrief[data-v-f4b8df5c] {
+  color: red;
+}
 .bg .main .result .resultDetail[data-v-f4b8df5c] {
   width: 96px;
   height: 15px;
@@ -711,9 +714,20 @@ to {
 }
 .bg .main .todo[data-v-f4b8df5c] {
   width: 20rem;
-  height: 15rem;
+  height: 16.875rem;
   margin: 0 auto;
-  background-color: aliceblue;
+  margin-bottom: 0.3125rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.bg .main .todo .mfcc[data-v-f4b8df5c] {
+  height: 6.25rem;
+}
+.bg .main .todo .freq[data-v-f4b8df5c] {
+  height: 6.25rem;
 }
 .bg .main .uploadBtn[data-v-f4b8df5c] {
   width: 3.28125rem;
