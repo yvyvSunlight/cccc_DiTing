@@ -601,6 +601,57 @@ to {
   height: 100vh;
   overflow: hidden;
 }
+.bg .detailPrompt[data-v-f4b8df5c] {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16.25rem;
+  height: 17.5rem;
+  background: linear-gradient(179.8deg, #B588F0 0.18%, #E1D0F7 22.57%, #FFFFFF 47.43%);
+  border-radius: 2.34375rem;
+}
+.bg .detailPrompt .promptUp[data-v-f4b8df5c] {
+  width: 16.25rem;
+  height: 4.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bg .detailPrompt .promptUp .promptTitle[data-v-f4b8df5c] {
+  height: 1.625rem;
+  width: 7.0625rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-left: 0.625rem;
+}
+.bg .detailPrompt .promptUp .promptTitle .promptLogo[data-v-f4b8df5c] {
+  width: 1.625rem;
+  height: 1.625rem;
+}
+.bg .detailPrompt .promptUp .bookLogo[data-v-f4b8df5c] {
+  width: 4.75rem;
+  height: 4.75rem;
+}
+.bg .detailPrompt .promptMiddle[data-v-f4b8df5c] {
+  margin-left: 1.875rem;
+}
+.bg .detailPrompt .promptDown[data-v-f4b8df5c] {
+  height: 7.5rem;
+  width: 12.5rem;
+  margin: 0.625rem auto;
+}
+.bg .detailPrompt .backBtn[data-v-f4b8df5c] {
+  width: 12.5rem;
+  height: 2.5rem;
+  margin: 0 auto;
+  background: #9747FF;
+  border-radius: 3.125rem;
+  color: white;
+  font-size: 1.25rem;
+}
 .bg .up[data-v-f4b8df5c] {
   background-color: #BDA4FD;
   width: 100%;
@@ -700,6 +751,7 @@ to {
   color: red;
 }
 .bg .main .result .resultDetail[data-v-f4b8df5c] {
+  text-decoration: underline;
   width: 96px;
   height: 15px;
   font-family: 'Source Serif Pro';
@@ -742,4 +794,21 @@ to {
 .bg .main .uploadBtn .addImg[data-v-f4b8df5c] {
   width: 100%;
   height: 100%;
+}
+.typewriter[data-v-f4b8df5c] {
+  white-space: pre-wrap;
+  /* 保留换行符并允许文字换行 */
+}
+.cursor[data-v-f4b8df5c] {
+  opacity: 1;
+  animation: blink-f4b8df5c 0.7s infinite;
+}
+@keyframes blink-f4b8df5c {
+0%,
+  100% {
+    opacity: 1;
+}
+50% {
+    opacity: 0;
+}
 }

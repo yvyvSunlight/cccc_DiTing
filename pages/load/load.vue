@@ -1,10 +1,35 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
+import { useAudioStore } from '../../store/audio';
 const title = ref('Title')
 const description = ref('description')
 const lemonjkFileSelect = uni.requireNativePlugin('lemonjk-FileSelect');
+const score = ref(0)
+const isShowDetail = ref(false)
+const showCursor = ref(true)
+score.value = 37;
 
-let score = 37.3
+const text = ref('Hello, 这是 Vue3 实现的打字机效果！');
+const displayText = ref('');
+const index = ref(0);
+const interval = ref(50); // 字符间隔时间（毫秒）
+let timer = null;
+
+
+// 启动打字机
+const startTypewriter = () => {
+  timer = setInterval(() => {
+    if (index.value < text.value.length) {
+      displayText.value += text.value.charAt(index.value);
+      index.value++;
+    } else {
+      clearInterval(timer);
+    //   hideCursor();
+	  showCursor.value = false; // 隐藏光标
+    }
+  }, interval.value);
+};
+
 
 // 定义响应式变量
 const chartData = ref({});
@@ -21,7 +46,7 @@ const opts = ref({
     lineHeight: 25
   },
   title: {
-    name: `${score}`,
+    name: `${score.value}`,
     fontSize: 25,
 	// fontWeight:700,
     color: "#261E58"
@@ -98,8 +123,8 @@ const getServerData = () => {
       series: [
         {
           data: [
-            { name: "一班", value: score, labelShow: false },
-            { name: "二班", value: 100 - score, labelShow: false },
+            { name: "一班", value: score.value, labelShow: false },
+            { name: "二班", value: 100 - score.value, labelShow: false },
           ]
         }
       ]
@@ -108,15 +133,64 @@ const getServerData = () => {
   }, 500);
 };
 
+const showDetail = () => {
+	isShowDetail.value = true;
+	startTypewriter();
+}
+const goBack = () => {
+	isShowDetail.value = false;
+}
+
 // 在组件挂载后调用
 onMounted(() => {
+  isShowDetail.value = false;
   getServerData();
+  text.value = `
+该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于中等偏高的伪音可信区间，表明该音频在多个关键声学维度存在异常信号结构，具备典型的合成语音特征。\n
+以下为核心分析要点：\n
+🔍 1. MFCC 频谱包络异常突变:\n
+在 MFCC 特征图中，特别是第 5–9 倒谱系数区域，可观察到能量纹理分布不连续，频率包络曲线存在明显跳变和扭曲现象，尤其在 800Hz~2000Hz 范围内出现共振峰漂移和局部谱线断裂。这类现象与真实语音中由声道共振引发的频率滑动模式明显不符，是典型伪音能量异常集中与合成滤波器失稳的表现。\n
+⏱ 2. 语速节奏高度规整，缺乏人类自然波动:\n
+从时间帧维度的 MFCC 序列中可以看到，该样本在语速节奏上表现出过度均匀、缺乏语义驱动变化的特征，帧间频率变化趋势呈现出合成模型常见的“节拍性”结构。这一结构高度吻合基于MelGAN系列声码器的生成特征，可能由其解码模块引起节奏缺乏自然扰动的输出现象。\n
+🎤 3. 声纹动态失稳，个体性建模缺失:\n
+进一步分析 Δ（动态变化）与 ΔΔ（加速度）维度的MFCC 通道发现，音频整体在帧间的能量梯度变化较弱，呈现出异常一致的频谱抖动轨迹，缺乏说话人自然发声过程中的肌肉张力变化和语调变化。这表明其在模拟声纹个体性方面存在明显缺失，是合成语音对“伪说话人”建模能力有限的信号。\n
+🧠 4. 综合推断与归因:\n
+结合频谱包络异常、节奏规则性增强、声纹建模不足等多维特征，系统推断该音频具有明显的合成音频特征，极可能由 基于 MelGAN 架构的语音合成器生成。建议在后续使用中对该样本进行上下文关联分析，并结合伪音来源库进行进一步溯源归属判断。
+`
 });
+
+onBeforeUnmount(() => {
+	  clearInterval(timer); // 清除定时器
+})
 
 </script>
 
 <template>
 	<view class="bg">
+		<view class="detailPrompt" v-show="isShowDetail">
+			<view class="promptUp">
+				<view class="promptTitle">
+					<image src="/static/fake.svg" mode="" class="promptLogo"></image>
+					伪造音频
+				</view>
+				<image
+					src="/static/bookLogo.svg"
+					mode="scaleToFill"
+					class="bookLogo"
+				/>
+			</view>
+			<view class="promptMiddle">
+				分析依据
+			</view>
+			<scroll-view scroll-y class="promptDown" show-scrollbar="true">
+				<view class="typewriter">
+					{{ displayText }}<span v-if="showCursor" class="cursor">|</span>
+				</view>
+			</scroll-view>
+			<button class="backBtn" @tap="goBack">
+				返回
+			</button>
+		</view>
 		<view class="up">
 			<view class="card">
 				<view class="textArea">
@@ -151,11 +225,10 @@ onMounted(() => {
 					<text class="resultBrief">
 					伪造音频
 					</text>
-						
 				</view>
-				<a href="" class="resultDetail">
+				<view class="resultDetail" @tap="showDetail">
 					点击查看鉴别依据
-				</a>
+				</view>
 			</view>
 			<view class="todo">
 				<view class="title">音频波形图</view>
@@ -181,6 +254,59 @@ onMounted(() => {
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
+		.detailPrompt {
+			position: absolute;
+			z-index: 1;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+
+			width: 520rpx;
+			height: 560rpx;
+
+			background: linear-gradient(179.8deg, #B588F0 0.18%, #E1D0F7 22.57%, #FFFFFF 47.43%);
+			border-radius: 75rpx;
+			.promptUp {
+				width: 520rpx;
+				height:152rpx;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				.promptTitle {
+					height:52rpx;
+					width: 226rpx;
+					display: flex;
+					justify-content: space-evenly;
+					align-items: center;
+					margin-left: 20rpx;
+					.promptLogo {
+						width: 52rpx;
+						height: 52rpx;
+					}
+				}
+				.bookLogo {
+					width: 152rpx;
+					height: 152rpx;
+				}
+			}
+			.promptMiddle {
+				margin-left: 60rpx;
+			}
+			.promptDown {
+				height:240rpx;
+				width: 400rpx;
+				margin: 20rpx auto;
+			}
+			.backBtn {
+				width: 400rpx;
+				height:80rpx;
+				margin: 0 auto;
+				background: #9747FF;
+				border-radius: 100rpx;
+				color: white;
+				font-size: 40rpx;
+			}
+		}
 		.up {
 			background-color: #BDA4FD;
 			width: 100%;
@@ -280,6 +406,7 @@ onMounted(() => {
 					}
 				}
 				.resultDetail{
+					text-decoration: underline; 
 					width: 96px;
 					height: 15px;
 					font-family: 'Source Serif Pro';
@@ -309,10 +436,6 @@ onMounted(() => {
 				.freq{
 					height: 200rpx;
 				}
-				.resultImg {
-					// height: 100%;
-					// width: 100%;
-				}
 			}
 			.uploadBtn{
 				width: 105rpx;
@@ -331,4 +454,17 @@ onMounted(() => {
 		}
 		
 	}
+
+	.typewriter {
+		white-space: pre-wrap; /* 保留换行符并允许文字换行 */
+	}
+	.cursor {
+		opacity: 1;
+		animation: blink 0.7s infinite;
+	}
+	@keyframes blink {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0; }
+	}
+
 </style>

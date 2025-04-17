@@ -96,6 +96,18 @@ if (uni.restoreGlobal) {
     };
     return instance("predict", "POST", audio, headers);
   };
+  const getHistory_mock = (date) => {
+    return uni.request({
+      url: `file://mock/history/${date}.json`,
+      method: "GET",
+      success: (res) => {
+        formatAppLog("log", "at request/api.js:21", res);
+      },
+      fail: (err) => {
+        formatAppLog("log", "at request/api.js:24", err);
+      }
+    });
+  };
   var isVue2 = false;
   function set(target, key, val) {
     if (Array.isArray(target)) {
@@ -1561,8 +1573,8 @@ This will fail in production.`);
   const _imports_0$3 = "/static/amico.svg";
   const _imports_1$3 = "/static/title.svg";
   const _imports_2$2 = "/static/headphone.png";
-  const _imports_3$1 = "/static/select.png";
-  const _imports_4$1 = "/static/document.png";
+  const _imports_3$2 = "/static/select.png";
+  const _imports_4$2 = "/static/document.png";
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -1574,13 +1586,14 @@ This will fail in production.`);
     __name: "index",
     setup(__props, { expose: __expose }) {
       __expose();
+      getHistory_mock("2025-04-04");
       const KJDocument = requireNativePlugin("KJ-Document");
       const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
       const json = vue.ref("");
       const path = vue.ref("");
       const open2 = () => {
         KJDocument.openURL((res) => {
-          formatAppLog("log", "at pages/index/index.vue:26", "openURL: " + JSON.stringify(res));
+          formatAppLog("log", "at pages/index/index.vue:28", "openURL: " + JSON.stringify(res));
           json.value = JSON.stringify(res);
           uni.showModal({
             title: "监听到分享的数据",
@@ -1602,10 +1615,10 @@ This will fail in production.`);
           uni.getFileInfo({
             filePath: path.value,
             success: (res2) => {
-              formatAppLog("log", "at pages/index/index.vue:63", "getFileInfo: " + JSON.stringify(res2));
+              formatAppLog("log", "at pages/index/index.vue:65", "getFileInfo: " + JSON.stringify(res2));
             },
             fail: (res2) => {
-              formatAppLog("log", "at pages/index/index.vue:66", "fail: " + JSON.stringify(res2));
+              formatAppLog("log", "at pages/index/index.vue:68", "fail: " + JSON.stringify(res2));
             }
           });
         });
@@ -1615,9 +1628,9 @@ This will fail in production.`);
           isShowUI
           // 默认是 true
         };
-        formatAppLog("log", "at pages/index/index.vue:77", JSON.stringify(dic));
+        formatAppLog("log", "at pages/index/index.vue:79", JSON.stringify(dic));
         KJDocument.setting_ios(dic, (res) => {
-          formatAppLog("log", "at pages/index/index.vue:79", "setting_ios: " + JSON.stringify(res));
+          formatAppLog("log", "at pages/index/index.vue:81", "setting_ios: " + JSON.stringify(res));
         });
       };
       vue.onMounted(() => {
@@ -1628,7 +1641,7 @@ This will fail in production.`);
       });
       const audioStore = useAudioStore();
       const gotoListenPage = () => {
-        formatAppLog("log", "at pages/index/index.vue:96", "click: goto listen page");
+        formatAppLog("log", "at pages/index/index.vue:98", "click: goto listen page");
         uni.navigateTo({
           url: "/pages/listen/listen",
           animationType: "slide-in-right",
@@ -1639,9 +1652,9 @@ This will fail in production.`);
       };
       const handleAudio = async (file) => {
         try {
-          formatAppLog("log", "at pages/index/index.vue:105", "开始上传：", file);
+          formatAppLog("log", "at pages/index/index.vue:107", "开始上传：", file);
           const response = await uploadAudio(file);
-          formatAppLog("log", "at pages/index/index.vue:107", "上传成功：", response);
+          formatAppLog("log", "at pages/index/index.vue:109", "上传成功：", response);
           uni.showToast({
             title: "上传成功",
             icon: "success",
@@ -1655,7 +1668,7 @@ This will fail in production.`);
             // 设置动画时长为300ms
           });
         } catch (error) {
-          formatAppLog("error", "at pages/index/index.vue:119", "上传失败：", error);
+          formatAppLog("error", "at pages/index/index.vue:121", "上传失败：", error);
           uni.showToast({
             title: "上传失败",
             icon: "none",
@@ -1675,10 +1688,10 @@ This will fail in production.`);
           tempFilePath,
           filePath: savedFilePath,
           success: (res) => {
-            formatAppLog("log", "at pages/index/index.vue:145", "文件已保存到本地:", savedFilePath);
+            formatAppLog("log", "at pages/index/index.vue:147", "文件已保存到本地:", savedFilePath);
           },
           fail: (err) => {
-            formatAppLog("error", "at pages/index/index.vue:148", "文件保存失败：", err);
+            formatAppLog("error", "at pages/index/index.vue:150", "文件保存失败：", err);
           }
         });
       };
@@ -1703,7 +1716,7 @@ This will fail in production.`);
             //属性数组满足其中一项 
           }
         }, (result) => {
-          formatAppLog("log", "at pages/index/index.vue:171", result);
+          formatAppLog("log", "at pages/index/index.vue:173", result);
           if (!result.code) {
             uni.showToast({
               title: result.detail,
@@ -1718,7 +1731,7 @@ This will fail in production.`);
                 animationDuration: 300
                 // 设置动画时长为300ms
               });
-            }, 1e3);
+            }, 900);
           } else {
             uni.showToast({
               title: result.detail,
@@ -1729,7 +1742,7 @@ This will fail in production.`);
         });
       };
       const gotoHistoryPage = () => {
-        formatAppLog("log", "at pages/index/index.vue:197", "go to history page");
+        formatAppLog("log", "at pages/index/index.vue:199", "go to history page");
         uni.navigateTo({
           url: "/pages/history/history",
           animationType: "slide-in-right",
@@ -1740,6 +1753,8 @@ This will fail in production.`);
       };
       const __returned__ = { KJDocument, lemonjkFileSelect, json, path, open: open2, settingIos, audioStore, gotoListenPage, handleAudio, saveFileWithDynamicExtension, gotoLoadPage, gotoHistoryPage, get uploadAudio() {
         return uploadAudio;
+      }, get getHistory_mock() {
+        return getHistory_mock;
       }, get useAudioStore() {
         return useAudioStore;
       }, ref: vue.ref, onMounted: vue.onMounted, onActivated: vue.onActivated };
@@ -1776,7 +1791,7 @@ This will fail in production.`);
       }, [
         vue.createElementVNode("image", {
           class: "img",
-          src: _imports_3$1
+          src: _imports_3$2
         }),
         vue.createTextVNode(" 音频检测 ")
       ]),
@@ -1787,7 +1802,7 @@ This will fail in production.`);
         vue.createTextVNode(" 历史记录 "),
         vue.createElementVNode("image", {
           class: "img",
-          src: _imports_4$1
+          src: _imports_4$2
         })
       ])
     ]);
@@ -1796,8 +1811,8 @@ This will fail in production.`);
   const _imports_0$2 = "/uni_modules/le-audio/static/get-back.svg";
   const _imports_1$2 = "/uni_modules/le-audio/static/fast-forward.svg";
   const _imports_2$1 = "/uni_modules/le-audio/static/play-list.svg";
-  const _imports_3 = "/uni_modules/le-audio/static/last-episode.svg";
-  const _imports_4 = "/uni_modules/le-audio/static/suspend.svg";
+  const _imports_3$1 = "/uni_modules/le-audio/static/last-episode.svg";
+  const _imports_4$1 = "/uni_modules/le-audio/static/suspend.svg";
   const _imports_5 = "/uni_modules/le-audio/static/start.svg";
   const _imports_6 = "/uni_modules/le-audio/static/next-set.svg";
   const _imports_7 = "/uni_modules/le-audio/static/multiple.svg";
@@ -2141,7 +2156,7 @@ This will fail in production.`);
           vue.createElementVNode(
             "image",
             {
-              src: _imports_3,
+              src: _imports_3$1,
               style: vue.normalizeStyle({ "opacity": $options.showLeftBtnOpacity }),
               onClick: _cache[6] || (_cache[6] = ($event) => $options.onSwitchAudio($data.audioActiveIndex - 1))
             },
@@ -2160,7 +2175,7 @@ This will fail in production.`);
             [
               vue.withDirectives(vue.createElementVNode(
                 "image",
-                { src: _imports_4 },
+                { src: _imports_4$1 },
                 null,
                 512
                 /* NEED_PATCH */
@@ -7018,9 +7033,11 @@ ${i3}
   if (typeof block0 === "function")
     block0(_sfc_main$5);
   const __easycom_1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-0ca34aee"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue"]]);
-  const _imports_0$1 = "/static/mfcc.png";
-  const _imports_1$1 = "/static/freq.png";
-  const _imports_2 = "/static/addBtn.svg";
+  const _imports_0$1 = "/static/fake.svg";
+  const _imports_1$1 = "/static/bookLogo.svg";
+  const _imports_2 = "/static/mfcc.png";
+  const _imports_3 = "/static/freq.png";
+  const _imports_4 = "/static/addBtn.svg";
   const _sfc_main$4 = {
     __name: "load",
     setup(__props, { expose: __expose }) {
@@ -7028,7 +7045,26 @@ ${i3}
       const title = vue.ref("Title");
       const description = vue.ref("description");
       const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
-      let score = 37.3;
+      const score = vue.ref(0);
+      const isShowDetail = vue.ref(false);
+      const showCursor = vue.ref(true);
+      score.value = 37;
+      const text = vue.ref("Hello, 这是 Vue3 实现的打字机效果！");
+      const displayText = vue.ref("");
+      const index = vue.ref(0);
+      const interval = vue.ref(50);
+      let timer = null;
+      const startTypewriter = () => {
+        timer = setInterval(() => {
+          if (index.value < text.value.length) {
+            displayText.value += text.value.charAt(index.value);
+            index.value++;
+          } else {
+            clearInterval(timer);
+            showCursor.value = false;
+          }
+        }, interval.value);
+      };
       const chartData = vue.ref({});
       const opts = vue.ref({
         rotate: false,
@@ -7043,7 +7079,7 @@ ${i3}
           lineHeight: 25
         },
         title: {
-          name: `${score}`,
+          name: `${score.value}`,
           fontSize: 25,
           // fontWeight:700,
           color: "#261E58"
@@ -7087,7 +7123,7 @@ ${i3}
             //属性数组满足其中一项 
           }
         }, (result) => {
-          formatAppLog("log", "at pages/load/load.vue:65", result);
+          formatAppLog("log", "at pages/load/load.vue:90", result);
           if (!result.code) {
             uni.showToast({
               title: result.detail,
@@ -7118,8 +7154,8 @@ ${i3}
             series: [
               {
                 data: [
-                  { name: "一班", value: score, labelShow: false },
-                  { name: "二班", value: 100 - score, labelShow: false }
+                  { name: "一班", value: score.value, labelShow: false },
+                  { name: "二班", value: 100 - score.value, labelShow: false }
                 ]
               }
             ]
@@ -7127,14 +7163,48 @@ ${i3}
           chartData.value = JSON.parse(JSON.stringify(res));
         }, 500);
       };
+      const showDetail = () => {
+        isShowDetail.value = true;
+        startTypewriter();
+      };
+      const goBack = () => {
+        isShowDetail.value = false;
+      };
       vue.onMounted(() => {
+        isShowDetail.value = false;
         getServerData();
+        text.value = `
+该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于中等偏高的伪音可信区间，表明该音频在多个关键声学维度存在异常信号结构，具备典型的合成语音特征。
+
+以下为核心分析要点：
+
+🔍 1. MFCC 频谱包络异常突变:
+
+在 MFCC 特征图中，特别是第 5–9 倒谱系数区域，可观察到能量纹理分布不连续，频率包络曲线存在明显跳变和扭曲现象，尤其在 800Hz~2000Hz 范围内出现共振峰漂移和局部谱线断裂。这类现象与真实语音中由声道共振引发的频率滑动模式明显不符，是典型伪音能量异常集中与合成滤波器失稳的表现。
+
+⏱ 2. 语速节奏高度规整，缺乏人类自然波动:
+
+从时间帧维度的 MFCC 序列中可以看到，该样本在语速节奏上表现出过度均匀、缺乏语义驱动变化的特征，帧间频率变化趋势呈现出合成模型常见的“节拍性”结构。这一结构高度吻合基于MelGAN系列声码器的生成特征，可能由其解码模块引起节奏缺乏自然扰动的输出现象。
+
+🎤 3. 声纹动态失稳，个体性建模缺失:
+
+进一步分析 Δ（动态变化）与 ΔΔ（加速度）维度的MFCC 通道发现，音频整体在帧间的能量梯度变化较弱，呈现出异常一致的频谱抖动轨迹，缺乏说话人自然发声过程中的肌肉张力变化和语调变化。这表明其在模拟声纹个体性方面存在明显缺失，是合成语音对“伪说话人”建模能力有限的信号。
+
+🧠 4. 综合推断与归因:
+
+结合频谱包络异常、节奏规则性增强、声纹建模不足等多维特征，系统推断该音频具有明显的合成音频特征，极可能由 基于 MelGAN 架构的语音合成器生成。建议在后续使用中对该样本进行上下文关联分析，并结合伪音来源库进行进一步溯源归属判断。
+`;
       });
-      const __returned__ = { title, description, lemonjkFileSelect, get score() {
-        return score;
-      }, set score(v2) {
-        score = v2;
-      }, chartData, opts, gotoLoadPage, getServerData, ref: vue.ref, onMounted: vue.onMounted };
+      vue.onBeforeUnmount(() => {
+        clearInterval(timer);
+      });
+      const __returned__ = { title, description, lemonjkFileSelect, score, isShowDetail, showCursor, text, displayText, index, interval, get timer() {
+        return timer;
+      }, set timer(v2) {
+        timer = v2;
+      }, startTypewriter, chartData, opts, gotoLoadPage, getServerData, showDetail, goBack, ref: vue.ref, onMounted: vue.onMounted, onBeforeUnmount: vue.onBeforeUnmount, get useAudioStore() {
+        return useAudioStore;
+      } };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
@@ -7143,6 +7213,53 @@ ${i3}
     const _component_le_audio = resolveEasycom(vue.resolveDynamicComponent("le-audio"), __easycom_0$1);
     const _component_qiun_data_charts = resolveEasycom(vue.resolveDynamicComponent("qiun-data-charts"), __easycom_1);
     return vue.openBlock(), vue.createElementBlock("view", { class: "bg" }, [
+      vue.withDirectives(vue.createElementVNode(
+        "view",
+        { class: "detailPrompt" },
+        [
+          vue.createElementVNode("view", { class: "promptUp" }, [
+            vue.createElementVNode("view", { class: "promptTitle" }, [
+              vue.createElementVNode("image", {
+                src: _imports_0$1,
+                mode: "",
+                class: "promptLogo"
+              }),
+              vue.createTextVNode(" 伪造音频 ")
+            ]),
+            vue.createElementVNode("image", {
+              src: _imports_1$1,
+              mode: "scaleToFill",
+              class: "bookLogo"
+            })
+          ]),
+          vue.createElementVNode("view", { class: "promptMiddle" }, " 分析依据 "),
+          vue.createElementVNode("scroll-view", {
+            "scroll-y": "",
+            class: "promptDown",
+            "show-scrollbar": "true"
+          }, [
+            vue.createElementVNode("view", { class: "typewriter" }, [
+              vue.createTextVNode(
+                vue.toDisplayString($setup.displayText),
+                1
+                /* TEXT */
+              ),
+              $setup.showCursor ? (vue.openBlock(), vue.createElementBlock("span", {
+                key: 0,
+                class: "cursor"
+              }, "|")) : vue.createCommentVNode("v-if", true)
+            ])
+          ]),
+          vue.createElementVNode("button", {
+            class: "backBtn",
+            onClick: $setup.goBack
+          }, " 返回 ")
+        ],
+        512
+        /* NEED_PATCH */
+      ), [
+        [vue.vShow, $setup.isShowDetail]
+      ]),
       vue.createElementVNode("view", { class: "up" }, [
         vue.createElementVNode("view", { class: "card" }, [
           vue.createElementVNode("view", { class: "textArea" }, [
@@ -7188,21 +7305,21 @@ ${i3}
             vue.createTextVNode(" 经分析，该音频为 "),
             vue.createElementVNode("text", { class: "resultBrief" }, " 伪造音频 ")
           ]),
-          vue.createElementVNode("a", {
-            href: "",
-            class: "resultDetail"
+          vue.createElementVNode("view", {
+            class: "resultDetail",
+            onClick: $setup.showDetail
           }, " 点击查看鉴别依据 ")
         ]),
         vue.createElementVNode("view", { class: "todo" }, [
           vue.createElementVNode("view", { class: "title" }, "音频波形图"),
           vue.createElementVNode("image", {
-            src: _imports_0$1,
+            src: _imports_2,
             mode: "",
             class: "mfcc"
           }),
           vue.createElementVNode("view", { class: "title" }, "MFCC特征图"),
           vue.createElementVNode("image", {
-            src: _imports_1$1,
+            src: _imports_3,
             mode: "",
             class: "freq"
           })
@@ -7212,7 +7329,7 @@ ${i3}
           onClick: $setup.gotoLoadPage
         }, [
           vue.createElementVNode("image", {
-            src: _imports_2,
+            src: _imports_4,
             mode: "",
             class: "addImg"
           })

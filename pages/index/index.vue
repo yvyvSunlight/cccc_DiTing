@@ -1,7 +1,9 @@
 <script setup>
-	import { uploadAudio } from '@/request/api.js'
+	import { uploadAudio, getHistory_mock } from '@/request/api.js'
 	import { useAudioStore } from '@/store/audio.js'
 	import { ref, onMounted, onActivated } from 'vue';
+
+	getHistory_mock('2025-04-04');
 
 	// 引入原生插件
 	const KJDocument = uni.requireNativePlugin('KJ-Document');
@@ -181,7 +183,7 @@
 						animationType: 'slide-in-right', // 设置动画类型为从右部滑入
 						animationDuration: 300 // 设置动画时长为300ms
 					});
-				}, 1000);
+				}, 900);
 			} else {
 				uni.showToast({
 					title:result.detail,
