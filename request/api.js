@@ -9,9 +9,6 @@ export const uploadAudio = (audio) => {
     return instance('predict', 'POST', audio, headers)
 }
 
-// export const uploadAudio_mock = (index) => {
-	
-// }
 
 export const getHistory_mock = (date) => {
 	return uni.request({
@@ -25,3 +22,5 @@ export const getHistory_mock = (date) => {
 		}
 	})
 }
+
+

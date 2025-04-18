@@ -1,6 +1,6 @@
 const BASE_URL = '/mock/'; // 替换为你的接口基础地址
 
-const instance = (url, method = 'GET', data = {}, headers = {}) => {
+const instance_mock = (url, method = 'GET', data = {}, headers = {}) => {
   return new Promise((resolve, reject) => {
     uni.request({
       url: `${BASE_URL}${url}`, // 拼接完整的请求地址
@@ -40,4 +40,4 @@ const instance = (url, method = 'GET', data = {}, headers = {}) => {
 };
 
 // 导出封装的请求方法
-export default instance;
+export default instance_mock;

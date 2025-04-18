@@ -30,7 +30,7 @@
 					@change="sliderChange"
 					@changing="sliderChanging" 
 					activeColor="#00000073" 
-					backgroundColor="#DAE0E6" 
+					backgroundColor="#0000001a"
 					block-color="#00000073"
 					block-size="0" />
 			</view>

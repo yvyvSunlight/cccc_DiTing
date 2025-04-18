@@ -1,23 +1,119 @@
 <script setup>
 	import { onMounted, ref } from 'vue';
 	import TimeCounterVue from '../../components/TimeCounter.vue';
+    import { useAudioStore } from '@/store/audio.js'
+    const audioStore = useAudioStore()
+    // import permision from "@/utils/permission.js"
+    // // for harmonyos
+	// const open = () => {
+    //     let env = uni.getSystemInfoSync().platform
+    //     if (env === 'android') {
+    //         permision.requestAndroidPermission('android.permission.RECORD_AUDIO').then((e) => {
+    //             if (e === -1) {
+    //                 uni.showToast({
+    //                     title: '您已经永久拒绝录音权限，请在应用设置中手动打开',
+    //                     icon: 'none',
+    //                 })
+    //                 setTimeout(() => {
+    //                     permision.gotoAppPermissionSetting(); // 跳转到应用设置页面
+    //                 }, 500); // 延迟 2 秒后跳转
+    //             } else if (e === 0) {
+    //                 uni.showToast({
+    //                     title: '您拒绝了录音授权',
+    //                     icon: 'none',
+    //                 })
+    //             } else if (e === 1) {
+    //                 this.show = true
+    //             } else {
+    //                 uni.showToast({
+    //                     title: '授权返回值错误',
+    //                     icon: 'none',
+    //                 })
+    //             }
+    //         }).catch((err) => {
+    //             uni.showToast({
+    //                 title: '拉起录音授权失败',
+    //                 icon: 'none',
+    //             })
+    //         })
+    //     } else if (env === 'ios') {
+    //         if (permision.judgeIosPermission("record"))
+    //             this.show = true
+    //         else
+    //             uni.showToast({
+    //                 title: '您拒绝了录音授权，请在应用设置中手动打开',
+    //                 icon: 'none',
+    //             })
+    //     }
+    // }
+    // open()
     const isPaused = ref(false);
 	const promptDisplay = ref(false);
 	const recorderManager = uni.getRecorderManager()
-	const innerAudioContext = uni.createInnerAudioContext()
+	// const innerAudioContext = uni.createInnerAudioContext()
+    // const voicePath = ref('')
+    // innerAudioContext.autoplay = true;
 	const startRecord = () => {
 		recorderManager.start()
 	}
+    recorderManager.onStart(() => {
+        console.log('recorder start =========')
+        isPaused.value = false;
+    })
+    recorderManager.start()
+
+    // recorderManager.stop()
+    recorderManager.onStop(() => {
+            console.log("recoder end ==========")
+            // console.log('recorder stop' + JSON.stringify(res));
+            // voicePath.value = res.tempFilePath;
+            // console.log('voicePath', voicePath.value);
+        });
 	const endRecord = () => {
-        isPaused.value = true;
 		recorderManager.stop();
+        recorderManager.onStop(() => {
+            console.log("recoder end ==========")
+            // console.log('recorder stop' + JSON.stringify(res));
+            // voicePath.value = res.tempFilePath;
+            // console.log('voicePath', voicePath.value);
+        });
+        isPaused.value = true;
 		promptDisplay.value = true;
 	}
 	onMounted(() => {
-		startRecord()
+        // recorderManager.onStop((res) => {
+        //     console.log('recorder stop' + JSON.stringify(res));
+        //     voicePath.value = res.tempFilePath;
+        //     console.log('voicePath', voicePath.value);
+        // });
+        recorderManager.onError((res) => {
+            console.log(res)
+            console.log('recorder error')
+            // uni.showToast({
+            //     title: '录音失败',
+            //     icon: 'none',
+            //     duration: 1000
+            // })
+        })
+		// startRecord()
 	})
 	
 	const gotoLoadPage = () => {
+        console.log('gotoLoadPage')
+        if ( audioStore.counter > 0) {
+            audioStore.audioPath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.m4a'
+            audioStore.mfccPath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.png'
+            audioStore.wavePath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/mfcc.png'
+            audioStore.result = '伪造音频'
+            audioStore.score = 12
+        } else {
+            audioStore.audioPath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/audio.m4a'
+            audioStore.mfccPath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/wave.png'
+            audioStore.wavePath = '/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/mfcc.png'
+            audioStore.result = '真实音频'
+            audioStore.score = 95
+        }
+        audioStore.counter++;
 		uni.navigateTo({
 			url: '/pages/load/load',
 			animationType: 'slide-in-right', // 设置动画类型为从底部滑入

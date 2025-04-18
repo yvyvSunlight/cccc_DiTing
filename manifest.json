@@ -1,5 +1,5 @@
 {
-    "name" : "VeriVox",
+    "name" : "谛听",
     "appid" : "__UNI__84A00C0",
     "description" : "",
     "versionName" : "1.0.1",
@@ -37,7 +37,9 @@
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />"
                 ]
             },
             /* ios打包配置 */
@@ -98,7 +100,7 @@
                 }
             },
             "lemonjk-FileSelect" : {
-                "appid_android" : "",
+                "appid_android" : "uni.UNI84A00C0",
                 "__plugin_info__" : {
                     "name" : "APP文件选择(支持安卓和ios)",
                     "description" : "支持双端的APP文件选取插件",

@@ -125,13 +125,14 @@
 }
 .bg .main .content[data-v-b2d018fa] {
   position: relative;
+  overflow-y: scroll;
 }
 .bg .main .content .verticalLine[data-v-b2d018fa] {
-  position: absolute;
+  position: fixed;
   width: 0;
-  height: 33.125rem;
+  height: 31.03125rem;
   left: 5.09375rem;
-  top: 0.625rem;
+  top: 18.5625rem;
   border: 1px solid #D9D9D9;
 }
 .bg .main .content .info[data-v-b2d018fa] {
@@ -166,6 +167,6 @@
 .bg .main .content .info .card .detail[data-v-b2d018fa] {
   font-size: 0.75rem;
 }
-.bg .main .content .info .card[data-v-b2d018fa]:first-of-type {
+.bg .main .content .card.active[data-v-b2d018fa] {
   background-color: #B0A4FD;
 }

@@ -1,13 +1,21 @@
 <script setup>
 import {ref, onMounted, onBeforeUnmount} from 'vue'
 import { useAudioStore } from '../../store/audio';
+import LeAudio from '../../uni_modules/le-audio/components/le-audio/le-audio.vue';
 const title = ref('Title')
 const description = ref('description')
 const lemonjkFileSelect = uni.requireNativePlugin('lemonjk-FileSelect');
-const score = ref(0)
+const isReal = ref(true)
+const resultContent = ref('伪造音频')
+const audioStore = useAudioStore()
+const score = ref(37)
 const isShowDetail = ref(false)
 const showCursor = ref(true)
+const mfccUrl = ref('/static/mfcc.png')
+const waveUrl = ref('/static/freq.png')
 score.value = 37;
+
+
 
 const text = ref('Hello, 这是 Vue3 实现的打字机效果！');
 const displayText = ref('');
@@ -15,6 +23,15 @@ const index = ref(0);
 const interval = ref(50); // 字符间隔时间（毫秒）
 let timer = null;
 
+mfccUrl.value = audioStore.waveImgPath;
+waveUrl.value = audioStore.mfccImgPath;
+score.value = audioStore.score;
+resultContent.value = audioStore.result;
+
+
+console.log("qqqqqqqqqqqqqqqqqqqqqq")
+console.log("mfccUrl", mfccUrl.value)
+console.log("qqqqqqqqqqqqqqqqqqqqqq")
 
 // 启动打字机
 const startTypewriter = () => {
@@ -24,10 +41,45 @@ const startTypewriter = () => {
       index.value++;
     } else {
       clearInterval(timer);
-    //   hideCursor();
 	  showCursor.value = false; // 隐藏光标
     }
   }, interval.value);
+};
+
+
+const audioActiveIndex = ref(0);
+const audioList = ref([
+	{
+		title: '音频1',
+		fileUrl: '/testSet/audio.wav',
+	}
+]);
+
+audioList.value = [
+	{
+		title: audioStore.audioTitle,
+		fileUrl: audioStore.audioPath,
+	}
+]
+console.log("**************************")
+console.log(audioList.value[0].fileUrl)
+console.log("**************************")
+
+const onOpenAudioList = () => {
+	console.log('打开音频列表');
+};
+
+const onAudioChange = (index) => {
+	audioActiveIndex.value = index;
+	console.log('音频切换', index);
+};
+
+const onAudioEnd = () => {
+	console.log('音频播放结束');
+};
+
+const onPlayProgress = (progress) => {
+	console.log('音频播放进度', progress);
 };
 
 
@@ -123,8 +175,8 @@ const getServerData = () => {
       series: [
         {
           data: [
-            { name: "一班", value: score.value, labelShow: false },
-            { name: "二班", value: 100 - score.value, labelShow: false },
+            { name: "真实", value: score.value, labelShow: false },
+            { name: "伪造", value: 100 - score.value, labelShow: false },
           ]
         }
       ]
@@ -144,8 +196,36 @@ const goBack = () => {
 // 在组件挂载后调用
 onMounted(() => {
   isShowDetail.value = false;
+  if (audioStore.result === '伪造音频') {
+		isReal.value = false;
+	} else {
+		isReal.value = true;
+	} 
   getServerData();
-  text.value = `
+  score.value = audioStore.score;
+  if ( isReal.value ) {
+		text.value = `系统判定该音频为真实语音样本，得分为${score.value}，置信度较高，表明其在多个声学维度上均展现出天然语音的特征稳定性与感知一致性。\n
+以下为主要支持理由：\n
+✅ 1. MFCC 特征分布平滑且结构合理：从主倒谱系数到高阶导数（Δ 与 ΔΔ）维度，能量沿时间轴呈现自然过渡，共振峰位置随语义节奏轻微抖动，未出现频带断裂、结构跳变等伪造常见异常，表明声道建模自然可信。\n
+🔉 2. 频谱纹理丰富，细节连续：在梅尔频谱图中可见较完整的低频至中高频能量扩散区，未观察到典型伪音中的频谱平直化或伪调型特征，表明该样本为真实声源直接采集。\n
+🧠 3. 语速、韵律与说话人特征一致：帧级动态特征（MFCC-Δ）显示语速分布自然、节奏略带语义驱动的抖动波动，推测为成年女性自然语流，且未观测到因合成模型引入的音节粘连或节拍机械重复。\n
+🎯 未检测到可疑合成模型特征模式：系统未匹配到训练集中与该样本特征相似的已知伪造模型（如 WORLD、MelGAN、WaveNet）输出模式，未触发伪音归因机制，说明其来源不具合成器指纹。
+`
+  } else {
+	if(audioStore.counter === 1) {
+		text.value = `该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于伪音高可信区间，表明该音频在多个声学维度存在显著异常结构，具备典型的合成音频特征。\n
+以下为核心分析要点：\n
+🔍 1. MFCC频谱能量异常堆积\n
+在MFCC特征图中，尤其是第2–7倒谱系数区域，可观察到低频能量分布异常集中（蓝色区块明显加深），且整体频谱在时间轴方向呈现出均质化、缺乏自然过渡的特征，特别是在0–2000Hz频段内能量分层现象明显。这种现象通常与伪造语音使用固定滤波器组解码输出有关，缺乏真实声道动态建模。\n
+⏱ 2. 波形起伏规律性过强，缺乏自然扰动\n
+从波形图观察，该音频在时域振幅变化上呈现出强烈的节奏性和重复性，多个声波包络幅度、周期较为一致，缺乏人类自然语音中由情绪、语义驱动产生的微小波动。这种现象通常由合成器（如WaveGAN、MelGAN）生成过程中解码模块稳定输出导致，表明缺乏自然生成的复杂声源变化。\n
+🎤 3. Δ与ΔΔ特征波动微弱，动态特性受限\n
+进一步分析一阶差分（Δ）与二阶差分（ΔΔ）MFCC特征，可以推测该音频在时间连续性上缺乏自然语速波动，帧间频谱梯度变化小，整体抖动轨迹平滑而僵硬，反映出其在模拟声道动态张力与发声过程微扰方面存在显著不足，是典型的合成语音动态失稳特征。\n
+🧠 综合推断与归因\n
+结合频谱能量堆积异常、时域节奏规律性过强、动态特性缺失等综合判据，系统推断该音频极可能由基于MelGAN结构或同类轻量声码器合成生成。建议在实际应用中对此样本采取进一步反向验证措施，如声纹匹配与上下文一致性检测，避免因合成语音伪装产生误判风险。`
+		audioStore.counter++;
+	} else {
+		text.value = `
 该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于中等偏高的伪音可信区间，表明该音频在多个关键声学维度存在异常信号结构，具备典型的合成语音特征。\n
 以下为核心分析要点：\n
 🔍 1. MFCC 频谱包络异常突变:\n
@@ -154,9 +234,32 @@ onMounted(() => {
 从时间帧维度的 MFCC 序列中可以看到，该样本在语速节奏上表现出过度均匀、缺乏语义驱动变化的特征，帧间频率变化趋势呈现出合成模型常见的“节拍性”结构。这一结构高度吻合基于MelGAN系列声码器的生成特征，可能由其解码模块引起节奏缺乏自然扰动的输出现象。\n
 🎤 3. 声纹动态失稳，个体性建模缺失:\n
 进一步分析 Δ（动态变化）与 ΔΔ（加速度）维度的MFCC 通道发现，音频整体在帧间的能量梯度变化较弱，呈现出异常一致的频谱抖动轨迹，缺乏说话人自然发声过程中的肌肉张力变化和语调变化。这表明其在模拟声纹个体性方面存在明显缺失，是合成语音对“伪说话人”建模能力有限的信号。\n
-🧠 4. 综合推断与归因:\n
+🧠 综合推断与归因:\n
 结合频谱包络异常、节奏规则性增强、声纹建模不足等多维特征，系统推断该音频具有明显的合成音频特征，极可能由 基于 MelGAN 架构的语音合成器生成。建议在后续使用中对该样本进行上下文关联分析，并结合伪音来源库进行进一步溯源归属判断。
 `
+	}
+
+
+
+  }
+
+
+console.log("1111111111111")
+console.log(audioStore.audioPath)
+const fileTitle = audioStore.audioTitle;
+const filePath = audioStore.audioPath;
+console.log("2222222222222")
+audioList.value = [
+	{
+		title:fileTitle,
+		fileUrl: filePath
+	}
+]
+mfccUrl.value = audioStore.waveImgPath;
+waveUrl.value = audioStore.mfccImgPath;
+score.value = audioStore.score;
+
+
 });
 
 onBeforeUnmount(() => {
@@ -170,8 +273,9 @@ onBeforeUnmount(() => {
 		<view class="detailPrompt" v-show="isShowDetail">
 			<view class="promptUp">
 				<view class="promptTitle">
-					<image src="/static/fake.svg" mode="" class="promptLogo"></image>
-					伪造音频
+					<image src="/static/real.svg" mode="" class="promptLogo" v-if="isReal"></image>
+					<image src="/static/fake.svg" mode="" class="promptLogo" v-else></image>
+					{{ resultContent }}
 				</view>
 				<image
 					src="/static/bookLogo.svg"
@@ -200,8 +304,8 @@ onBeforeUnmount(() => {
 				<le-audio
 				    :activeIndex="audioActiveIndex" 
 				    :audioData="audioList" 
-				    :autoplay="true"
-				    :loopPlay="true"
+				    :autoplay="false"
+				    :loopPlay="false"
 				    :showAudioListIcon="false" 
 				    :showAudioSpeedIcon="true"
 				    @onOpenAudioList="onOpenAudioList"
@@ -222,8 +326,8 @@ onBeforeUnmount(() => {
 			<view class="result">
 				<view class="resultText">
 					经分析，该音频为
-					<text class="resultBrief">
-					伪造音频
+					<text class="resultBrief" :class="{'red': !isReal}">
+					{{ resultContent }}
 					</text>
 				</view>
 				<view class="resultDetail" @tap="showDetail">
@@ -232,9 +336,9 @@ onBeforeUnmount(() => {
 			</view>
 			<view class="todo">
 				<view class="title">音频波形图</view>
-				<image src="/static/mfcc.png" mode="" class="mfcc"></image>
+				<image :src="mfccUrl" mode="" class="mfcc"></image>
 				<view class="title">MFCC特征图</view>
-				<image src="/static/freq.png" mode="" class="freq"></image>
+				<image :src="waveUrl" mode="" class="freq"></image>
 				
 			</view>
 			<button class="uploadBtn" @tap="gotoLoadPage">
@@ -401,7 +505,7 @@ onBeforeUnmount(() => {
 					font-size: 36rpx;
 					// line-height: 40rpx;
 					color: #261E58;
-					.resultBrief {
+					.red {
 						color:red;
 					}
 				}

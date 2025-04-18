@@ -1,0 +1,42 @@
+[
+    {
+        "id": 0,
+        "mfcc": "string",
+        "result": "伪造音频",
+        "score": 37,
+        "timestamp": "string",
+        "waveform": "string"
+    },
+    {
+        "id": 1,
+        "mfcc": "string",
+        "result": "真实音频",
+        "score": 89,
+        "timestamp": "string",
+        "waveform": "string"
+    },
+    {
+        "id": 2,
+        "mfcc": "string",
+        "result": "伪造音频",
+        "score": 17,
+        "timestamp": "string",
+        "waveform": "string"
+    },
+    {
+        "id": 3,
+        "mfcc": "string",
+        "result": "真实音频",
+        "score": 92,
+        "timestamp": "string",
+        "waveform": "string"
+    },
+    {
+        "id": 4,
+        "mfcc": "string",
+        "result": "伪造音频",
+        "score": 50,
+        "timestamp": "string",
+        "waveform": "string"
+    }
+]

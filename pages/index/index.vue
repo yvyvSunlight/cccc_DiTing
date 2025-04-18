@@ -3,7 +3,7 @@
 	import { useAudioStore } from '@/store/audio.js'
 	import { ref, onMounted, onActivated } from 'vue';
 
-	getHistory_mock('2025-04-04');
+	// getHistory_mock('2025-04-04');
 
 	// 引入原生插件
 	const KJDocument = uni.requireNativePlugin('KJ-Document');
@@ -172,6 +172,26 @@
 		}, result => {
 			console.log(result);
 			if (!result.code) {
+				
+				audioStore.audioPath = result.files[0].filePath;
+				audioStore.audioTitle = result.files[0].fileName;
+				console.log("ioooooooooooooooooooooooooooooooooooo")
+				console.log(result.files[0].filePath);
+				console.log(result.files[0].fileName);
+				console.log(audioStore.audioTitle);
+				console.log("oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+				if(audioStore.audioTitle === 'LeiJun1.wav') {
+					audioStore.mfccPath = '/storage/emulated/0/Android/data/com.miui.gallery/cache/fake_leijun/mfcc.png';
+					audioStore.wavePath = '/storage/emulated/0/Android/data/com.miui.gallery/cache/fake_leijun/wave.png';
+					audioStore.result = '伪造音频';
+					audioStore.score = 17;
+				} else {
+					audioStore.mfccPath = '/storage/emulated/0/Android/data/com.miui.gallery/cache/real_leijun/mfcc.png';
+					audioStore.wavePath = '/storage/emulated/0/Android/data/com.miui.gallery/cache/real_leijun/wave.png';
+					audioStore.result = '真实音频';
+					audioStore.score = 89;
+				}
+				console.log("audioPath", audioStore.audioPath);
 				uni.showToast({
 					title:result.detail,
 					icon:'success',
@@ -203,11 +223,19 @@
 		  animationDuration: 300           // 设置动画时长为300ms
 		});
 	}
+	const reset = () => {
+		audioStore.counter = 0;
+		uni.showToast({
+			title: '重置成功',
+			icon: 'success',
+			duration: 1000
+		});
+	}
 </script>
 
 <template>
 	<view class="content">
-		<image class="logo" src="/static/amico.svg"></image>
+		<image class="logo" src="/static/amico.svg" @tap="reset"></image>
 		<view class="title">
 			<image
 				src="/static/title.svg"

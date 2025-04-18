@@ -1,5 +1,13 @@
 <script setup>
-	import { ref, onMounted, computed } from 'vue';
+	import { ref, onMounted } from 'vue';
+	import { audioHistory } from '@/mock/data.js'
+	import { useAudioStore } from '@/store/audio.js'
+	const curIndex = ref(27);
+	const cardIndex = ref(0);
+	const audioHistoryData = ref(audioHistory);
+
+	const audioStore = useAudioStore()
+
 	const curYear = ref('');
 	const curMonth = ref('');
 	const curDay = ref('');
@@ -47,12 +55,42 @@
 		curDayOfWeek.value = box.dayOfWeek;
 		curMonth.value = box.month;
 		curYear.value = box.year;
+		curIndex.value = index;
+		cardIndex.value = 0;
 		// toView.value = 'box' + index;
+	}
+	const chooseCard = (item, index) => {
+		console.log("/////////////////////")
+		console.log("item", item);
+		console.log("/////////////////////")
+		
+		cardIndex.value = index;
+		console.log("cardIndex", cardIndex.value)
+		audioStore.mfccImgPath = item.mfccPath
+		audioStore.waveImgPath = item.wavePath
+		audioStore.result = item.result
+		audioStore.score = item.score
+		// console.log("audioStore", audioStore.mfccImgPath)
+		
+	}
+
+	const gotoLoadPage = (item, index) => {
+		audioStore.mfccImgPath = item.mfccPath
+		audioStore.waveImgPath = item.wavePath
+		audioStore.audioPath = item.audioPath
+		audioStore.result = item.result
+		audioStore.score = item.score
+		uni.navigateTo({
+			url: '/pages/load/load',
+			animationType: 'slide-in-right', // 设置动画类型为从底部滑入
+			animationDuration: 300           // 设置动画时长为300ms
+		})
 	}
 
 	onMounted(() => {
 		generateBoxes();
 		activeIndex.value = 27; // 默认选中第28个元素
+		curIndex.value = 27;
 		toView.value = 'box27'
 	})
 		
@@ -97,49 +135,17 @@
 			</view>
 			<view class="content">
 				<view class="verticalLine"></view>
-				<view class="info">
+				<view class="info" 
+				v-for="(item, index) in audioHistoryData[curIndex]" 
+				:key="index">
 					<view class="infoTime">
-						21:34
-					</view>
-					<view class="card" style="background-color: #B0A4FD;">
-						<view class="judge">真实音频</view>
-						<view class="detail">查看详情></view>
-					</view>
-				</view>
-				<view class="info">
-					<view class="infoTime">
-						21:34
-					</view>
-					<view class="card">
-						<view class="judge">真实音频</view>
-						<view class="detail">查看详情></view>
-					</view>
-				</view>
-				<view class="info">
-					<view class="infoTime">
-						21:34
-					</view>
-					<view class="card">
-						<view class="judge">真实音频</view>
-						<view class="detail">查看详情></view>
-					</view>
-				</view>
-				<view class="info">
-					<view class="infoTime">
-						21:34
-					</view>
-					<view class="card">
-						<view class="judge">真实音频</view>
-						<view class="detail">查看详情></view>
-					</view>
-				</view>
-				<view class="info">
-					<view class="infoTime">
-						21:34
-					</view>
-					<view class="card">
-						<view class="judge">真实音频</view>
-						<view class="detail">查看详情></view>
+						{{ item.time }}
+					</view> 
+				<view class="card" 
+				:class="{'active':cardIndex === index}"
+				@tap="chooseCard(item, index)">
+						<view class="judge">{{ item.result }}</view>
+						<view class="detail" @tap="gotoLoadPage(item,index)">查看详情></view>
 					</view>
 				</view>
 			</view>
@@ -223,13 +229,6 @@
 			width: 100vw;
 			display: flex;
 			white-space: nowrap;
-			// flex-wrap: wrap;
-			// padding-right: 80rpx;
-			// margin: 2rpx 0;
-			// overflow-y: hidden;
-			// overflow-x: scroll;
-			// scroll-snap-align: end;
-			// scroll-into-view: right;
 			height: 140rpx;
 			.oneDateOuter{
 				display: inline-block;
@@ -280,12 +279,13 @@
 		}
 		.content {
 			position: relative;
+			overflow-y: scroll;
 			.verticalLine{
-				position: absolute;
+				position: fixed;
 				width: 0rpx;
-				height: 1060rpx;
+				height: 993rpx;
 				left: 163rpx;
-				top: 20rpx;
+				top: 594rpx;
 				border: 1px solid #D9D9D9;
 			}
 			.info {
@@ -319,9 +319,10 @@
 						font-size: 24rpx;
 					}
 				}
-				.card:first-of-type{
-					background-color: #B0A4FD;
-				}
+
+			}
+			.card.active {
+				background-color: #B0A4FD;
 			}
 		}
 	}

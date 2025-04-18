@@ -101,10 +101,10 @@ if (uni.restoreGlobal) {
       url: `file://mock/history/${date}.json`,
       method: "GET",
       success: (res) => {
-        formatAppLog("log", "at request/api.js:21", res);
+        formatAppLog("log", "at request/api.js:18", res);
       },
       fail: (err) => {
-        formatAppLog("log", "at request/api.js:24", err);
+        formatAppLog("log", "at request/api.js:21", err);
       }
     });
   };
@@ -1552,10 +1552,15 @@ This will fail in production.`);
   }
   const useAudioStore = defineStore("audio", {
     state: () => ({
+      audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1744898173374_audio.wav",
+      audioTitle: "",
+      result: "伪造音频",
+      mfccImgPath: "/static/freq.png",
+      waveImgPath: "/static/mfcc.png",
+      score: 37,
+      counter: 0,
       audio: null,
       mfcc: null,
-      result: "",
-      score: 0,
       waveform: null
     }),
     actions: {
@@ -1574,7 +1579,7 @@ This will fail in production.`);
   const _imports_1$3 = "/static/title.svg";
   const _imports_2$2 = "/static/headphone.png";
   const _imports_3$2 = "/static/select.png";
-  const _imports_4$2 = "/static/document.png";
+  const _imports_4$1 = "/static/document.png";
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -1586,7 +1591,6 @@ This will fail in production.`);
     __name: "index",
     setup(__props, { expose: __expose }) {
       __expose();
-      getHistory_mock("2025-04-04");
       const KJDocument = requireNativePlugin("KJ-Document");
       const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
       const json = vue.ref("");
@@ -1718,6 +1722,25 @@ This will fail in production.`);
         }, (result) => {
           formatAppLog("log", "at pages/index/index.vue:173", result);
           if (!result.code) {
+            audioStore.audioPath = result.files[0].filePath;
+            audioStore.audioTitle = result.files[0].fileName;
+            formatAppLog("log", "at pages/index/index.vue:178", "ioooooooooooooooooooooooooooooooooooo");
+            formatAppLog("log", "at pages/index/index.vue:179", result.files[0].filePath);
+            formatAppLog("log", "at pages/index/index.vue:180", result.files[0].fileName);
+            formatAppLog("log", "at pages/index/index.vue:181", audioStore.audioTitle);
+            formatAppLog("log", "at pages/index/index.vue:182", "oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+            if (audioStore.audioTitle === "LeiJun1.wav") {
+              audioStore.mfccPath = "/storage/emulated/0/Android/data/com.miui.gallery/cache/fake_leijun/mfcc.png";
+              audioStore.wavePath = "/storage/emulated/0/Android/data/com.miui.gallery/cache/fake_leijun/wave.png";
+              audioStore.result = "伪造音频";
+              audioStore.score = 17;
+            } else {
+              audioStore.mfccPath = "/storage/emulated/0/Android/data/com.miui.gallery/cache/real_leijun/mfcc.png";
+              audioStore.wavePath = "/storage/emulated/0/Android/data/com.miui.gallery/cache/real_leijun/wave.png";
+              audioStore.result = "真实音频";
+              audioStore.score = 89;
+            }
+            formatAppLog("log", "at pages/index/index.vue:194", "audioPath", audioStore.audioPath);
             uni.showToast({
               title: result.detail,
               icon: "success",
@@ -1742,7 +1765,7 @@ This will fail in production.`);
         });
       };
       const gotoHistoryPage = () => {
-        formatAppLog("log", "at pages/index/index.vue:199", "go to history page");
+        formatAppLog("log", "at pages/index/index.vue:219", "go to history page");
         uni.navigateTo({
           url: "/pages/history/history",
           animationType: "slide-in-right",
@@ -1751,7 +1774,15 @@ This will fail in production.`);
           // 设置动画时长为300ms
         });
       };
-      const __returned__ = { KJDocument, lemonjkFileSelect, json, path, open: open2, settingIos, audioStore, gotoListenPage, handleAudio, saveFileWithDynamicExtension, gotoLoadPage, gotoHistoryPage, get uploadAudio() {
+      const reset = () => {
+        audioStore.counter = 0;
+        uni.showToast({
+          title: "重置成功",
+          icon: "success",
+          duration: 1e3
+        });
+      };
+      const __returned__ = { KJDocument, lemonjkFileSelect, json, path, open: open2, settingIos, audioStore, gotoListenPage, handleAudio, saveFileWithDynamicExtension, gotoLoadPage, gotoHistoryPage, reset, get uploadAudio() {
         return uploadAudio;
       }, get getHistory_mock() {
         return getHistory_mock;
@@ -1766,7 +1797,8 @@ This will fail in production.`);
     return vue.openBlock(), vue.createElementBlock("view", { class: "content" }, [
       vue.createElementVNode("image", {
         class: "logo",
-        src: _imports_0$3
+        src: _imports_0$3,
+        onClick: $setup.reset
       }),
       vue.createElementVNode("view", { class: "title" }, [
         vue.createElementVNode("image", {
@@ -1802,434 +1834,12 @@ This will fail in production.`);
         vue.createTextVNode(" 历史记录 "),
         vue.createElementVNode("image", {
           class: "img",
-          src: _imports_4$2
+          src: _imports_4$1
         })
       ])
     ]);
   }
   const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["render", _sfc_render$d], ["__scopeId", "data-v-1cf27b2a"], ["__file", "E:/Code/Project/cccc_DiTing/pages/index/index.vue"]]);
-  const _imports_0$2 = "/uni_modules/le-audio/static/get-back.svg";
-  const _imports_1$2 = "/uni_modules/le-audio/static/fast-forward.svg";
-  const _imports_2$1 = "/uni_modules/le-audio/static/play-list.svg";
-  const _imports_3$1 = "/uni_modules/le-audio/static/last-episode.svg";
-  const _imports_4$1 = "/uni_modules/le-audio/static/suspend.svg";
-  const _imports_5 = "/uni_modules/le-audio/static/start.svg";
-  const _imports_6 = "/uni_modules/le-audio/static/next-set.svg";
-  const _imports_7 = "/uni_modules/le-audio/static/multiple.svg";
-  let innerAudioContext = null;
-  const _sfc_main$d = {
-    name: "le-audio",
-    props: {
-      /**
-       * audioData 播放列表
-       * @property {String} title 播放名称
-       * @property {String} fileUrl 播放链接
-       * */
-      audioData: {
-        type: Array,
-        default: () => {
-          return [];
-        }
-      },
-      // 当前播放的位置索引
-      activeIndex: {
-        type: Number,
-        default: -1
-      },
-      // 是否显示播放列表
-      showAudioListIcon: {
-        type: Boolean,
-        default: false
-      },
-      // 是否显示播放倍速
-      showAudioSpeedIcon: {
-        type: Boolean,
-        default: false
-      },
-      // 是否自动播放
-      autoplay: {
-        type: Boolean,
-        default: true
-      },
-      // 是否循环播放
-      loopPlay: {
-        type: Boolean,
-        default: false
-      }
-    },
-    data() {
-      return {
-        isPaused: true,
-        //是否暂停中
-        duration: 0,
-        //音频时长
-        currentTime: 0,
-        //当前时长
-        audioActiveIndex: -1,
-        //当前播放索引
-        speed: 1,
-        //倍速
-        isSlidering: false,
-        //是否移动中
-        isEndAcudio: false,
-        //最后一个音频结束
-        audioList: [
-          // {title:'',image:'',fileUrl:''}
-        ]
-      };
-    },
-    watch: {
-      activeIndex() {
-        this.audioActiveIndex = this.activeIndex;
-        this.setAudioInfo(true);
-      },
-      audioData: {
-        handler: function() {
-          this.audioList = this.audioData;
-          this.setAudioInfo(false);
-        },
-        deep: true
-      }
-    },
-    computed: {
-      showLeftBtnOpacity() {
-        return this.audioActiveIndex === 0 ? 0.5 : 1;
-      },
-      showRightBtnOpacity() {
-        return this.audioActiveIndex + 1 === this.audioList.length ? 0.5 : 1;
-      }
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.audioActiveIndex = this.activeIndex;
-        this.audioList = this.audioData;
-        this.startPlay();
-      });
-    },
-    beforeDestroy() {
-    },
-    methods: {
-      minTimeFmt(val) {
-        let minute = parseInt(val / 60);
-        let seconds = Math.ceil(val % 60);
-        return `${minute >= 10 ? minute : "0" + minute}:${seconds >= 10 ? seconds : "0" + seconds}`;
-      },
-      onOpenList() {
-        this.$emit("onOpenAudioList");
-      },
-      startPlay() {
-        innerAudioContext = uni.getBackgroundAudioManager();
-        innerAudioContext.startTime = 0;
-        this.setAudioInfo(false);
-        innerAudioContext.playbackRate = this.speed;
-        innerAudioContext.onPlay(() => {
-          this.onPlay();
-        });
-        innerAudioContext.onPause(() => {
-          this.onPause();
-        });
-        innerAudioContext.onCanplay(() => {
-          this.onCanplay();
-        });
-        innerAudioContext.onEnded(() => {
-          this.onEnded();
-        });
-        innerAudioContext.onError((res) => {
-          this.onError(res);
-        });
-        innerAudioContext.onTimeUpdate(() => {
-          this.setPlayData();
-        });
-        innerAudioContext.onPrev(() => {
-          this.onSwitchAudio(this.audioActiveIndex - 1);
-        });
-        innerAudioContext.onNext(() => {
-          this.onSwitchAudio(this.audioActiveIndex + 1);
-        });
-      },
-      // 暂停播放切换
-      onPlayPause() {
-        var _a, _b, _c;
-        if (this.isPaused) {
-          if (this.isEndAcudio) {
-            innerAudioContext.title = (_a = this.audioList[this.audioActiveIndex]) == null ? void 0 : _a.title;
-            innerAudioContext.coverImgUrl = (_b = this.audioList[this.audioActiveIndex]) == null ? void 0 : _b.image;
-            innerAudioContext.src = encodeURI((_c = this.audioList[this.audioActiveIndex]) == null ? void 0 : _c.fileUrl).replace(/\+/g, "%2B");
-          }
-          innerAudioContext.play();
-          this.isPaused = false;
-        } else {
-          innerAudioContext.pause();
-          this.isPaused = true;
-        }
-      },
-      // 切换音频
-      onSwitchAudio(index) {
-        if (index < 0 || index >= this.audioList.length) {
-          return;
-        }
-        if (this.audioActiveIndex === index) {
-          this.setAudioInfo(true);
-          return;
-        }
-        this.audioActiveIndex = index;
-        this.$emit("onAudioChange", this.audioList[this.audioActiveIndex], index);
-        this.setAudioInfo(true);
-      },
-      // 调整播放倍速
-      onSpeed() {
-        if (this.speed == 1) {
-          innerAudioContext.playbackRate = 2;
-          this.speed = 2;
-        } else {
-          innerAudioContext.playbackRate = 1;
-          this.speed = 1;
-        }
-      },
-      // 调整播放位置
-      onSeek(num) {
-        if (!this.currentTime)
-          return;
-        let seekNum = num + this.currentTime;
-        this.isSlidering = true;
-        if (seekNum < 0) {
-          this.currentTime = 0;
-          innerAudioContext.seek(0);
-        } else if (seekNum > this.duration) {
-          this.currentTime = this.duration;
-          innerAudioContext.seek(this.duration);
-        } else {
-          this.currentTime = seekNum;
-          innerAudioContext.seek(seekNum);
-        }
-        this.isSlidering = false;
-      },
-      // 滑块滚动到的位置
-      sliderChange(e2) {
-        this.isSlidering = false;
-        this.currentTime = e2.detail.value;
-        innerAudioContext.seek(e2.detail.value);
-      },
-      // 滑块滚动到的位置 实时
-      sliderChanging(e2) {
-        this.isSlidering = true;
-        this.currentTime = e2.detail.value;
-      },
-      // 设置以及转换信息
-      setPlayData(event) {
-        if (this.isSlidering)
-          return;
-        if (!innerAudioContext.duration && !innerAudioContext.currentTime)
-          return;
-        this.duration = innerAudioContext.duration || 0;
-        this.currentTime = innerAudioContext.currentTime || 0;
-        this.$emit("onPlayProgress", this.currentTime, this.duration);
-      },
-      // 设置播放
-      setAudioInfo(isAutoplay) {
-        var _a, _b, _c, _d, _e2, _f, _g, _h, _i, _j;
-        if (innerAudioContext && this.audioActiveIndex > -1 && ((_a = this.audioList[this.audioActiveIndex]) == null ? void 0 : _a.fileUrl)) {
-          innerAudioContext.title = (_b = this.audioList[this.audioActiveIndex]) == null ? void 0 : _b.title;
-          innerAudioContext.coverImgUrl = (_c = this.audioList[this.audioActiveIndex]) == null ? void 0 : _c.image;
-          innerAudioContext.src = encodeURI((_d = this.audioList[this.audioActiveIndex]) == null ? void 0 : _d.fileUrl).replace(/\+/g, "%2B");
-          if ((_e2 = this.audioList[this.audioActiveIndex]) == null ? void 0 : _e2.fileUrl.startsWith("/")) {
-            innerAudioContext.src = (_f = this.audioList[this.audioActiveIndex]) == null ? void 0 : _f.fileUrl;
-          }
-          innerAudioContext.epname = (_g = this.audioList[this.audioActiveIndex]) == null ? void 0 : _g.epname;
-          innerAudioContext.singer = (_h = this.audioList[this.audioActiveIndex]) == null ? void 0 : _h.singer;
-          innerAudioContext.webUrl = (_i = this.audioList[this.audioActiveIndex]) == null ? void 0 : _i.webUrl;
-          if (isAutoplay || this.autoplay) {
-            innerAudioContext.play();
-          } else {
-            innerAudioContext.pause();
-          }
-        }
-        if (!((_j = this.audioList[this.audioActiveIndex]) == null ? void 0 : _j.fileUrl)) {
-          this.duration = 0;
-          this.currentTime = 0;
-          this.isPaused = true;
-          innerAudioContext.pause();
-        }
-      },
-      // 播放事件
-      onPlay() {
-        this.isEndAcudio = false;
-        this.isSlidering = false;
-        this.isPaused = false;
-      },
-      // 暂停事件
-      onPause() {
-        this.isPaused = true;
-      },
-      // 播放结束事件
-      onEnded() {
-        if (this.audioActiveIndex + 1 >= this.audioList.length) {
-          if (this.loopPlay) {
-            this.onSwitchAudio(0);
-            return;
-          }
-          this.currentTime = 0;
-          this.isPaused = true;
-          this.isEndAcudio = true;
-          this.$emit("onAudioEnd");
-          return;
-        }
-        this.onSwitchAudio(this.audioActiveIndex + 1);
-      },
-      // 音频进入可以播放状态
-      onCanplay(event) {
-        this.isSlidering = false;
-        this.setPlayData(event);
-      },
-      // 播放失败
-      onError(res) {
-        this.duration = 0;
-        this.currentTime = 0;
-        this.isPaused = true;
-        innerAudioContext.pause();
-      }
-    }
-  };
-  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "audio-content" }, [
-      vue.createCommentVNode(" 调速拉条区 "),
-      vue.createElementVNode("view", { class: "audio-progress" }, [
-        vue.createCommentVNode(" 后退15秒 "),
-        vue.createElementVNode("image", {
-          src: _imports_0$2,
-          onClick: _cache[0] || (_cache[0] = ($event) => $options.onSeek(-15))
-        }),
-        vue.createCommentVNode(" 进度条 "),
-        vue.createElementVNode("view", { class: "audio-bar" }, [
-          vue.createElementVNode("slider", {
-            class: "audio-slider",
-            value: $data.currentTime,
-            min: 0,
-            max: $data.duration,
-            onChange: _cache[1] || (_cache[1] = (...args) => $options.sliderChange && $options.sliderChange(...args)),
-            onChanging: _cache[2] || (_cache[2] = (...args) => $options.sliderChanging && $options.sliderChanging(...args)),
-            activeColor: "#00000073",
-            backgroundColor: "#DAE0E6",
-            "block-color": "#00000073",
-            "block-size": "0"
-          }, null, 40, ["value", "max"])
-        ]),
-        vue.createCommentVNode(" 快进15秒 "),
-        vue.createElementVNode("image", {
-          src: _imports_1$2,
-          onClick: _cache[3] || (_cache[3] = ($event) => $options.onSeek(15))
-        })
-      ]),
-      vue.createCommentVNode(" 显示时间进度区 "),
-      vue.createElementVNode("view", { class: "bar-tips" }, [
-        vue.createElementVNode(
-          "text",
-          null,
-          vue.toDisplayString($options.minTimeFmt($data.currentTime)),
-          1
-          /* TEXT */
-        ),
-        vue.createElementVNode(
-          "text",
-          null,
-          vue.toDisplayString($options.minTimeFmt($data.duration)),
-          1
-          /* TEXT */
-        )
-      ]),
-      vue.createCommentVNode(" 按钮区 "),
-      vue.createElementVNode("view", { class: "audio-btn" }, [
-        vue.createCommentVNode(" 列表按钮 "),
-        !$props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", { key: 0 })) : vue.createCommentVNode("v-if", true),
-        $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", {
-          key: 1,
-          src: _imports_2$1,
-          onClick: _cache[4] || (_cache[4] = (...args) => $options.onOpenList && $options.onOpenList(...args))
-        })) : vue.createCommentVNode("v-if", true),
-        $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("text", {
-          key: 2,
-          class: "play-list-text",
-          onClick: _cache[5] || (_cache[5] = (...args) => $options.onOpenList && $options.onOpenList(...args))
-        }, "播放列表")) : vue.createCommentVNode("v-if", true),
-        vue.createElementVNode("view", { class: "play-box" }, [
-          vue.createCommentVNode(" 上一首 "),
-          vue.createElementVNode(
-            "image",
-            {
-              src: _imports_3$1,
-              style: vue.normalizeStyle({ "opacity": $options.showLeftBtnOpacity }),
-              onClick: _cache[6] || (_cache[6] = ($event) => $options.onSwitchAudio($data.audioActiveIndex - 1))
-            },
-            null,
-            4
-            /* STYLE */
-          ),
-          vue.createCommentVNode(" 播放/暂停 "),
-          vue.createElementVNode(
-            "view",
-            {
-              class: "play-btn",
-              style: vue.normalizeStyle({ backgroundColor: $data.isPaused ? "#475266" : "#475266" }),
-              onClick: _cache[7] || (_cache[7] = (...args) => $options.onPlayPause && $options.onPlayPause(...args))
-            },
-            [
-              vue.withDirectives(vue.createElementVNode(
-                "image",
-                { src: _imports_4$1 },
-                null,
-                512
-                /* NEED_PATCH */
-              ), [
-                [vue.vShow, $data.isPaused]
-              ]),
-              vue.withDirectives(vue.createElementVNode(
-                "image",
-                { src: _imports_5 },
-                null,
-                512
-                /* NEED_PATCH */
-              ), [
-                [vue.vShow, !$data.isPaused]
-              ])
-            ],
-            4
-            /* STYLE */
-          ),
-          vue.createCommentVNode(" 下一首 "),
-          vue.createElementVNode(
-            "image",
-            {
-              src: _imports_6,
-              style: vue.normalizeStyle({ "opacity": $options.showRightBtnOpacity }),
-              onClick: _cache[8] || (_cache[8] = ($event) => $options.onSwitchAudio($data.audioActiveIndex + 1))
-            },
-            null,
-            4
-            /* STYLE */
-          )
-        ]),
-        vue.createCommentVNode(" 倍速切换 "),
-        !$props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock("image", { key: 3 })) : vue.createCommentVNode("v-if", true),
-        $props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock("image", {
-          key: 4,
-          src: _imports_7,
-          onClick: _cache[9] || (_cache[9] = (...args) => $options.onSpeed && $options.onSpeed(...args))
-        })) : vue.createCommentVNode("v-if", true),
-        $props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock(
-          "text",
-          {
-            key: 5,
-            class: "speed-text",
-            onClick: _cache[10] || (_cache[10] = (...args) => $options.onSpeed && $options.onSpeed(...args))
-          },
-          "x" + vue.toDisplayString($data.speed),
-          1
-          /* TEXT */
-        )) : vue.createCommentVNode("v-if", true)
-      ])
-    ]);
-  }
-  const __easycom_0$1 = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-06e1fcc8"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/le-audio/components/le-audio/le-audio.vue"]]);
   const pages = [
     {
       path: "pages/index/index",
@@ -5124,13 +4734,13 @@ ${i3}
     }
   })();
   var nr = tr;
-  const _sfc_main$c = {
+  const _sfc_main$d = {
     name: "loading1",
     data() {
       return {};
     }
   };
-  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container loading1" }, [
       vue.createElementVNode("view", { class: "shape shape1" }),
       vue.createElementVNode("view", { class: "shape shape2" }),
@@ -5138,14 +4748,14 @@ ${i3}
       vue.createElementVNode("view", { class: "shape shape4" })
     ]);
   }
-  const Loading1 = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-0e645258"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading1.vue"]]);
-  const _sfc_main$b = {
+  const Loading1 = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["render", _sfc_render$c], ["__scopeId", "data-v-0e645258"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading1.vue"]]);
+  const _sfc_main$c = {
     name: "loading2",
     data() {
       return {};
     }
   };
-  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container loading2" }, [
       vue.createElementVNode("view", { class: "shape shape1" }),
       vue.createElementVNode("view", { class: "shape shape2" }),
@@ -5153,14 +4763,14 @@ ${i3}
       vue.createElementVNode("view", { class: "shape shape4" })
     ]);
   }
-  const Loading2 = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-3df48dc2"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading2.vue"]]);
-  const _sfc_main$a = {
+  const Loading2 = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["render", _sfc_render$b], ["__scopeId", "data-v-3df48dc2"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading2.vue"]]);
+  const _sfc_main$b = {
     name: "loading3",
     data() {
       return {};
     }
   };
-  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container loading3" }, [
       vue.createElementVNode("view", { class: "shape shape1" }),
       vue.createElementVNode("view", { class: "shape shape2" }),
@@ -5168,14 +4778,14 @@ ${i3}
       vue.createElementVNode("view", { class: "shape shape4" })
     ]);
   }
-  const Loading3 = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-27a8293c"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading3.vue"]]);
-  const _sfc_main$9 = {
+  const Loading3 = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["render", _sfc_render$a], ["__scopeId", "data-v-27a8293c"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading3.vue"]]);
+  const _sfc_main$a = {
     name: "loading5",
     data() {
       return {};
     }
   };
-  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container loading5" }, [
       vue.createElementVNode("view", { class: "shape shape1" }),
       vue.createElementVNode("view", { class: "shape shape2" }),
@@ -5183,14 +4793,14 @@ ${i3}
       vue.createElementVNode("view", { class: "shape shape4" })
     ]);
   }
-  const Loading4 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-2e7deb83"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading4.vue"]]);
-  const _sfc_main$8 = {
+  const Loading4 = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$9], ["__scopeId", "data-v-2e7deb83"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading4.vue"]]);
+  const _sfc_main$9 = {
     name: "loading6",
     data() {
       return {};
     }
   };
-  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container loading6" }, [
       vue.createElementVNode("view", { class: "shape shape1" }),
       vue.createElementVNode("view", { class: "shape shape2" }),
@@ -5198,8 +4808,8 @@ ${i3}
       vue.createElementVNode("view", { class: "shape shape4" })
     ]);
   }
-  const Loading5 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__scopeId", "data-v-ef674bbb"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading5.vue"]]);
-  const _sfc_main$7 = {
+  const Loading5 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$8], ["__scopeId", "data-v-ef674bbb"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/loading5.vue"]]);
+  const _sfc_main$8 = {
     components: { Loading1, Loading2, Loading3, Loading4, Loading5 },
     name: "qiun-loading",
     props: {
@@ -5212,7 +4822,7 @@ ${i3}
       return {};
     }
   };
-  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_Loading1 = vue.resolveComponent("Loading1");
     const _component_Loading2 = vue.resolveComponent("Loading2");
     const _component_Loading3 = vue.resolveComponent("Loading3");
@@ -5226,8 +4836,8 @@ ${i3}
       $props.loadingType == 5 ? (vue.openBlock(), vue.createBlock(_component_Loading5, { key: 4 })) : vue.createCommentVNode("v-if", true)
     ]);
   }
-  const __easycom_0 = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/qiun-loading.vue"]]);
-  const _sfc_main$6 = {
+  const __easycom_0$1 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-loading/qiun-loading.vue"]]);
+  const _sfc_main$7 = {
     name: "qiun-error",
     props: {
       errorMessage: {
@@ -5239,7 +4849,7 @@ ${i3}
       return {};
     }
   };
-  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "chartsview" }, [
       vue.createElementVNode("view", { class: "charts-error" }),
       vue.createElementVNode(
@@ -5251,7 +4861,7 @@ ${i3}
       )
     ]);
   }
-  const __easycom_1$1 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-a99d579b"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-error/qiun-error.vue"]]);
+  const __easycom_1 = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6], ["__scopeId", "data-v-a99d579b"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-error/qiun-error.vue"]]);
   const color$1 = ["#1890FF", "#91CB74", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"];
   const formatDateTime = (timeStamp, returnType) => {
     var date = /* @__PURE__ */ new Date();
@@ -6267,7 +5877,7 @@ ${i3}
     var currentdate = year + seperator + month + seperator + strDate;
     return currentdate;
   }
-  const _sfc_main$5 = {
+  const _sfc_main$6 = {
     name: "qiun-data-charts",
     mixins: [nr.mixinDatacom],
     props: {
@@ -6973,9 +6583,9 @@ ${i3}
       }
     }
   };
-  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_qiun_loading = resolveEasycom(vue.resolveDynamicComponent("qiun-loading"), __easycom_0);
-    const _component_qiun_error = resolveEasycom(vue.resolveDynamicComponent("qiun-error"), __easycom_1$1);
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_qiun_loading = resolveEasycom(vue.resolveDynamicComponent("qiun-loading"), __easycom_0$1);
+    const _component_qiun_error = resolveEasycom(vue.resolveDynamicComponent("qiun-error"), __easycom_1);
     return vue.openBlock(), vue.createElementBlock("view", {
       class: "chartsview",
       id: "ChartBoxId" + $data.cid
@@ -7031,13 +6641,434 @@ ${i3}
     ], 8, ["id"]);
   }
   if (typeof block0 === "function")
-    block0(_sfc_main$5);
-  const __easycom_1 = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-0ca34aee"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue"]]);
-  const _imports_0$1 = "/static/fake.svg";
-  const _imports_1$1 = "/static/bookLogo.svg";
-  const _imports_2 = "/static/mfcc.png";
-  const _imports_3 = "/static/freq.png";
-  const _imports_4 = "/static/addBtn.svg";
+    block0(_sfc_main$6);
+  const __easycom_0 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__scopeId", "data-v-0ca34aee"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/qiun-data-charts/components/qiun-data-charts/qiun-data-charts.vue"]]);
+  const _imports_0$2 = "/uni_modules/le-audio/static/get-back.svg";
+  const _imports_1$2 = "/uni_modules/le-audio/static/fast-forward.svg";
+  const _imports_2$1 = "/uni_modules/le-audio/static/play-list.svg";
+  const _imports_3$1 = "/uni_modules/le-audio/static/last-episode.svg";
+  const _imports_4 = "/uni_modules/le-audio/static/suspend.svg";
+  const _imports_5 = "/uni_modules/le-audio/static/start.svg";
+  const _imports_6 = "/uni_modules/le-audio/static/next-set.svg";
+  const _imports_7 = "/uni_modules/le-audio/static/multiple.svg";
+  let innerAudioContext = null;
+  const _sfc_main$5 = {
+    name: "le-audio",
+    props: {
+      /**
+       * audioData 播放列表
+       * @property {String} title 播放名称
+       * @property {String} fileUrl 播放链接
+       * */
+      audioData: {
+        type: Array,
+        default: () => {
+          return [];
+        }
+      },
+      // 当前播放的位置索引
+      activeIndex: {
+        type: Number,
+        default: -1
+      },
+      // 是否显示播放列表
+      showAudioListIcon: {
+        type: Boolean,
+        default: false
+      },
+      // 是否显示播放倍速
+      showAudioSpeedIcon: {
+        type: Boolean,
+        default: false
+      },
+      // 是否自动播放
+      autoplay: {
+        type: Boolean,
+        default: true
+      },
+      // 是否循环播放
+      loopPlay: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data() {
+      return {
+        isPaused: true,
+        //是否暂停中
+        duration: 0,
+        //音频时长
+        currentTime: 0,
+        //当前时长
+        audioActiveIndex: -1,
+        //当前播放索引
+        speed: 1,
+        //倍速
+        isSlidering: false,
+        //是否移动中
+        isEndAcudio: false,
+        //最后一个音频结束
+        audioList: [
+          // {title:'',image:'',fileUrl:''}
+        ]
+      };
+    },
+    watch: {
+      activeIndex() {
+        this.audioActiveIndex = this.activeIndex;
+        this.setAudioInfo(true);
+      },
+      audioData: {
+        handler: function() {
+          this.audioList = this.audioData;
+          this.setAudioInfo(false);
+        },
+        deep: true
+      }
+    },
+    computed: {
+      showLeftBtnOpacity() {
+        return this.audioActiveIndex === 0 ? 0.5 : 1;
+      },
+      showRightBtnOpacity() {
+        return this.audioActiveIndex + 1 === this.audioList.length ? 0.5 : 1;
+      }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        this.audioActiveIndex = this.activeIndex;
+        this.audioList = this.audioData;
+        this.startPlay();
+      });
+    },
+    beforeDestroy() {
+    },
+    methods: {
+      minTimeFmt(val) {
+        let minute = parseInt(val / 60);
+        let seconds = Math.ceil(val % 60);
+        return `${minute >= 10 ? minute : "0" + minute}:${seconds >= 10 ? seconds : "0" + seconds}`;
+      },
+      onOpenList() {
+        this.$emit("onOpenAudioList");
+      },
+      startPlay() {
+        innerAudioContext = uni.getBackgroundAudioManager();
+        innerAudioContext.startTime = 0;
+        this.setAudioInfo(false);
+        innerAudioContext.playbackRate = this.speed;
+        innerAudioContext.onPlay(() => {
+          this.onPlay();
+        });
+        innerAudioContext.onPause(() => {
+          this.onPause();
+        });
+        innerAudioContext.onCanplay(() => {
+          this.onCanplay();
+        });
+        innerAudioContext.onEnded(() => {
+          this.onEnded();
+        });
+        innerAudioContext.onError((res) => {
+          this.onError(res);
+        });
+        innerAudioContext.onTimeUpdate(() => {
+          this.setPlayData();
+        });
+        innerAudioContext.onPrev(() => {
+          this.onSwitchAudio(this.audioActiveIndex - 1);
+        });
+        innerAudioContext.onNext(() => {
+          this.onSwitchAudio(this.audioActiveIndex + 1);
+        });
+      },
+      // 暂停播放切换
+      onPlayPause() {
+        var _a, _b, _c;
+        if (this.isPaused) {
+          if (this.isEndAcudio) {
+            innerAudioContext.title = (_a = this.audioList[this.audioActiveIndex]) == null ? void 0 : _a.title;
+            innerAudioContext.coverImgUrl = (_b = this.audioList[this.audioActiveIndex]) == null ? void 0 : _b.image;
+            innerAudioContext.src = encodeURI((_c = this.audioList[this.audioActiveIndex]) == null ? void 0 : _c.fileUrl).replace(/\+/g, "%2B");
+          }
+          innerAudioContext.play();
+          this.isPaused = false;
+        } else {
+          innerAudioContext.pause();
+          this.isPaused = true;
+        }
+      },
+      // 切换音频
+      onSwitchAudio(index) {
+        if (index < 0 || index >= this.audioList.length) {
+          return;
+        }
+        if (this.audioActiveIndex === index) {
+          this.setAudioInfo(true);
+          return;
+        }
+        this.audioActiveIndex = index;
+        this.$emit("onAudioChange", this.audioList[this.audioActiveIndex], index);
+        this.setAudioInfo(true);
+      },
+      // 调整播放倍速
+      onSpeed() {
+        if (this.speed == 1) {
+          innerAudioContext.playbackRate = 2;
+          this.speed = 2;
+        } else {
+          innerAudioContext.playbackRate = 1;
+          this.speed = 1;
+        }
+      },
+      // 调整播放位置
+      onSeek(num) {
+        if (!this.currentTime)
+          return;
+        let seekNum = num + this.currentTime;
+        this.isSlidering = true;
+        if (seekNum < 0) {
+          this.currentTime = 0;
+          innerAudioContext.seek(0);
+        } else if (seekNum > this.duration) {
+          this.currentTime = this.duration;
+          innerAudioContext.seek(this.duration);
+        } else {
+          this.currentTime = seekNum;
+          innerAudioContext.seek(seekNum);
+        }
+        this.isSlidering = false;
+      },
+      // 滑块滚动到的位置
+      sliderChange(e2) {
+        this.isSlidering = false;
+        this.currentTime = e2.detail.value;
+        innerAudioContext.seek(e2.detail.value);
+      },
+      // 滑块滚动到的位置 实时
+      sliderChanging(e2) {
+        this.isSlidering = true;
+        this.currentTime = e2.detail.value;
+      },
+      // 设置以及转换信息
+      setPlayData(event) {
+        if (this.isSlidering)
+          return;
+        if (!innerAudioContext.duration && !innerAudioContext.currentTime)
+          return;
+        this.duration = innerAudioContext.duration || 0;
+        this.currentTime = innerAudioContext.currentTime || 0;
+        this.$emit("onPlayProgress", this.currentTime, this.duration);
+      },
+      // 设置播放
+      setAudioInfo(isAutoplay) {
+        var _a, _b, _c, _d, _e2, _f, _g, _h, _i, _j;
+        if (innerAudioContext && this.audioActiveIndex > -1 && ((_a = this.audioList[this.audioActiveIndex]) == null ? void 0 : _a.fileUrl)) {
+          innerAudioContext.title = (_b = this.audioList[this.audioActiveIndex]) == null ? void 0 : _b.title;
+          innerAudioContext.coverImgUrl = (_c = this.audioList[this.audioActiveIndex]) == null ? void 0 : _c.image;
+          innerAudioContext.src = encodeURI((_d = this.audioList[this.audioActiveIndex]) == null ? void 0 : _d.fileUrl).replace(/\+/g, "%2B");
+          if ((_e2 = this.audioList[this.audioActiveIndex]) == null ? void 0 : _e2.fileUrl.startsWith("/")) {
+            innerAudioContext.src = (_f = this.audioList[this.audioActiveIndex]) == null ? void 0 : _f.fileUrl;
+          }
+          innerAudioContext.epname = (_g = this.audioList[this.audioActiveIndex]) == null ? void 0 : _g.epname;
+          innerAudioContext.singer = (_h = this.audioList[this.audioActiveIndex]) == null ? void 0 : _h.singer;
+          innerAudioContext.webUrl = (_i = this.audioList[this.audioActiveIndex]) == null ? void 0 : _i.webUrl;
+          if (isAutoplay || this.autoplay) {
+            innerAudioContext.play();
+          } else {
+            innerAudioContext.pause();
+          }
+        }
+        if (!((_j = this.audioList[this.audioActiveIndex]) == null ? void 0 : _j.fileUrl)) {
+          this.duration = 0;
+          this.currentTime = 0;
+          this.isPaused = true;
+          innerAudioContext.pause();
+        }
+      },
+      // 播放事件
+      onPlay() {
+        this.isEndAcudio = false;
+        this.isSlidering = false;
+        this.isPaused = false;
+      },
+      // 暂停事件
+      onPause() {
+        this.isPaused = true;
+      },
+      // 播放结束事件
+      onEnded() {
+        if (this.audioActiveIndex + 1 >= this.audioList.length) {
+          if (this.loopPlay) {
+            this.onSwitchAudio(0);
+            return;
+          }
+          this.currentTime = 0;
+          this.isPaused = true;
+          this.isEndAcudio = true;
+          this.$emit("onAudioEnd");
+          return;
+        }
+        this.onSwitchAudio(this.audioActiveIndex + 1);
+      },
+      // 音频进入可以播放状态
+      onCanplay(event) {
+        this.isSlidering = false;
+        this.setPlayData(event);
+      },
+      // 播放失败
+      onError(res) {
+        this.duration = 0;
+        this.currentTime = 0;
+        this.isPaused = true;
+        innerAudioContext.pause();
+      }
+    }
+  };
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "audio-content" }, [
+      vue.createCommentVNode(" 调速拉条区 "),
+      vue.createElementVNode("view", { class: "audio-progress" }, [
+        vue.createCommentVNode(" 后退15秒 "),
+        vue.createElementVNode("image", {
+          src: _imports_0$2,
+          onClick: _cache[0] || (_cache[0] = ($event) => $options.onSeek(-15))
+        }),
+        vue.createCommentVNode(" 进度条 "),
+        vue.createElementVNode("view", { class: "audio-bar" }, [
+          vue.createElementVNode("slider", {
+            class: "audio-slider",
+            value: $data.currentTime,
+            min: 0,
+            max: $data.duration,
+            onChange: _cache[1] || (_cache[1] = (...args) => $options.sliderChange && $options.sliderChange(...args)),
+            onChanging: _cache[2] || (_cache[2] = (...args) => $options.sliderChanging && $options.sliderChanging(...args)),
+            activeColor: "#00000073",
+            backgroundColor: "#0000001a",
+            "block-color": "#00000073",
+            "block-size": "0"
+          }, null, 40, ["value", "max"])
+        ]),
+        vue.createCommentVNode(" 快进15秒 "),
+        vue.createElementVNode("image", {
+          src: _imports_1$2,
+          onClick: _cache[3] || (_cache[3] = ($event) => $options.onSeek(15))
+        })
+      ]),
+      vue.createCommentVNode(" 显示时间进度区 "),
+      vue.createElementVNode("view", { class: "bar-tips" }, [
+        vue.createElementVNode(
+          "text",
+          null,
+          vue.toDisplayString($options.minTimeFmt($data.currentTime)),
+          1
+          /* TEXT */
+        ),
+        vue.createElementVNode(
+          "text",
+          null,
+          vue.toDisplayString($options.minTimeFmt($data.duration)),
+          1
+          /* TEXT */
+        )
+      ]),
+      vue.createCommentVNode(" 按钮区 "),
+      vue.createElementVNode("view", { class: "audio-btn" }, [
+        vue.createCommentVNode(" 列表按钮 "),
+        !$props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", { key: 0 })) : vue.createCommentVNode("v-if", true),
+        $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("image", {
+          key: 1,
+          src: _imports_2$1,
+          onClick: _cache[4] || (_cache[4] = (...args) => $options.onOpenList && $options.onOpenList(...args))
+        })) : vue.createCommentVNode("v-if", true),
+        $props.showAudioListIcon ? (vue.openBlock(), vue.createElementBlock("text", {
+          key: 2,
+          class: "play-list-text",
+          onClick: _cache[5] || (_cache[5] = (...args) => $options.onOpenList && $options.onOpenList(...args))
+        }, "播放列表")) : vue.createCommentVNode("v-if", true),
+        vue.createElementVNode("view", { class: "play-box" }, [
+          vue.createCommentVNode(" 上一首 "),
+          vue.createElementVNode(
+            "image",
+            {
+              src: _imports_3$1,
+              style: vue.normalizeStyle({ "opacity": $options.showLeftBtnOpacity }),
+              onClick: _cache[6] || (_cache[6] = ($event) => $options.onSwitchAudio($data.audioActiveIndex - 1))
+            },
+            null,
+            4
+            /* STYLE */
+          ),
+          vue.createCommentVNode(" 播放/暂停 "),
+          vue.createElementVNode(
+            "view",
+            {
+              class: "play-btn",
+              style: vue.normalizeStyle({ backgroundColor: $data.isPaused ? "#475266" : "#475266" }),
+              onClick: _cache[7] || (_cache[7] = (...args) => $options.onPlayPause && $options.onPlayPause(...args))
+            },
+            [
+              vue.withDirectives(vue.createElementVNode(
+                "image",
+                { src: _imports_4 },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vShow, $data.isPaused]
+              ]),
+              vue.withDirectives(vue.createElementVNode(
+                "image",
+                { src: _imports_5 },
+                null,
+                512
+                /* NEED_PATCH */
+              ), [
+                [vue.vShow, !$data.isPaused]
+              ])
+            ],
+            4
+            /* STYLE */
+          ),
+          vue.createCommentVNode(" 下一首 "),
+          vue.createElementVNode(
+            "image",
+            {
+              src: _imports_6,
+              style: vue.normalizeStyle({ "opacity": $options.showRightBtnOpacity }),
+              onClick: _cache[8] || (_cache[8] = ($event) => $options.onSwitchAudio($data.audioActiveIndex + 1))
+            },
+            null,
+            4
+            /* STYLE */
+          )
+        ]),
+        vue.createCommentVNode(" 倍速切换 "),
+        !$props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock("image", { key: 3 })) : vue.createCommentVNode("v-if", true),
+        $props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock("image", {
+          key: 4,
+          src: _imports_7,
+          onClick: _cache[9] || (_cache[9] = (...args) => $options.onSpeed && $options.onSpeed(...args))
+        })) : vue.createCommentVNode("v-if", true),
+        $props.showAudioSpeedIcon ? (vue.openBlock(), vue.createElementBlock(
+          "text",
+          {
+            key: 5,
+            class: "speed-text",
+            onClick: _cache[10] || (_cache[10] = (...args) => $options.onSpeed && $options.onSpeed(...args))
+          },
+          "x" + vue.toDisplayString($data.speed),
+          1
+          /* TEXT */
+        )) : vue.createCommentVNode("v-if", true)
+      ])
+    ]);
+  }
+  const LeAudio = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__scopeId", "data-v-06e1fcc8"], ["__file", "E:/Code/Project/cccc_DiTing/uni_modules/le-audio/components/le-audio/le-audio.vue"]]);
+  const _imports_0$1 = "/static/real.svg";
+  const _imports_1$1 = "/static/fake.svg";
+  const _imports_2 = "/static/bookLogo.svg";
+  const _imports_3 = "/static/addBtn.svg";
   const _sfc_main$4 = {
     __name: "load",
     setup(__props, { expose: __expose }) {
@@ -7045,15 +7076,27 @@ ${i3}
       const title = vue.ref("Title");
       const description = vue.ref("description");
       const lemonjkFileSelect = requireNativePlugin("lemonjk-FileSelect");
-      const score = vue.ref(0);
+      const isReal = vue.ref(true);
+      const resultContent = vue.ref("伪造音频");
+      const audioStore = useAudioStore();
+      const score = vue.ref(37);
       const isShowDetail = vue.ref(false);
       const showCursor = vue.ref(true);
+      const mfccUrl = vue.ref("/static/mfcc.png");
+      const waveUrl = vue.ref("/static/freq.png");
       score.value = 37;
       const text = vue.ref("Hello, 这是 Vue3 实现的打字机效果！");
       const displayText = vue.ref("");
       const index = vue.ref(0);
       const interval = vue.ref(50);
       let timer = null;
+      mfccUrl.value = audioStore.waveImgPath;
+      waveUrl.value = audioStore.mfccImgPath;
+      score.value = audioStore.score;
+      resultContent.value = audioStore.result;
+      formatAppLog("log", "at pages/load/load.vue:32", "qqqqqqqqqqqqqqqqqqqqqq");
+      formatAppLog("log", "at pages/load/load.vue:33", "mfccUrl", mfccUrl.value);
+      formatAppLog("log", "at pages/load/load.vue:34", "qqqqqqqqqqqqqqqqqqqqqq");
       const startTypewriter = () => {
         timer = setInterval(() => {
           if (index.value < text.value.length) {
@@ -7064,6 +7107,35 @@ ${i3}
             showCursor.value = false;
           }
         }, interval.value);
+      };
+      const audioActiveIndex = vue.ref(0);
+      const audioList = vue.ref([
+        {
+          title: "音频1",
+          fileUrl: "/testSet/audio.wav"
+        }
+      ]);
+      audioList.value = [
+        {
+          title: audioStore.audioTitle,
+          fileUrl: audioStore.audioPath
+        }
+      ];
+      formatAppLog("log", "at pages/load/load.vue:64", "**************************");
+      formatAppLog("log", "at pages/load/load.vue:65", audioList.value[0].fileUrl);
+      formatAppLog("log", "at pages/load/load.vue:66", "**************************");
+      const onOpenAudioList = () => {
+        formatAppLog("log", "at pages/load/load.vue:69", "打开音频列表");
+      };
+      const onAudioChange = (index2) => {
+        audioActiveIndex.value = index2;
+        formatAppLog("log", "at pages/load/load.vue:74", "音频切换", index2);
+      };
+      const onAudioEnd = () => {
+        formatAppLog("log", "at pages/load/load.vue:78", "音频播放结束");
+      };
+      const onPlayProgress = (progress) => {
+        formatAppLog("log", "at pages/load/load.vue:82", "音频播放进度", progress);
       };
       const chartData = vue.ref({});
       const opts = vue.ref({
@@ -7123,7 +7195,7 @@ ${i3}
             //属性数组满足其中一项 
           }
         }, (result) => {
-          formatAppLog("log", "at pages/load/load.vue:90", result);
+          formatAppLog("log", "at pages/load/load.vue:142", result);
           if (!result.code) {
             uni.showToast({
               title: result.detail,
@@ -7154,8 +7226,8 @@ ${i3}
             series: [
               {
                 data: [
-                  { name: "一班", value: score.value, labelShow: false },
-                  { name: "二班", value: 100 - score.value, labelShow: false }
+                  { name: "真实", value: score.value, labelShow: false },
+                  { name: "伪造", value: 100 - score.value, labelShow: false }
                 ]
               }
             ]
@@ -7172,8 +7244,50 @@ ${i3}
       };
       vue.onMounted(() => {
         isShowDetail.value = false;
+        if (audioStore.result === "伪造音频") {
+          isReal.value = false;
+        } else {
+          isReal.value = true;
+        }
         getServerData();
-        text.value = `
+        score.value = audioStore.score;
+        if (isReal.value) {
+          text.value = `系统判定该音频为真实语音样本，得分为${score.value}，置信度较高，表明其在多个声学维度上均展现出天然语音的特征稳定性与感知一致性。
+
+以下为主要支持理由：
+
+✅ 1. MFCC 特征分布平滑且结构合理：从主倒谱系数到高阶导数（Δ 与 ΔΔ）维度，能量沿时间轴呈现自然过渡，共振峰位置随语义节奏轻微抖动，未出现频带断裂、结构跳变等伪造常见异常，表明声道建模自然可信。
+
+🔉 2. 频谱纹理丰富，细节连续：在梅尔频谱图中可见较完整的低频至中高频能量扩散区，未观察到典型伪音中的频谱平直化或伪调型特征，表明该样本为真实声源直接采集。
+
+🧠 3. 语速、韵律与说话人特征一致：帧级动态特征（MFCC-Δ）显示语速分布自然、节奏略带语义驱动的抖动波动，推测为成年女性自然语流，且未观测到因合成模型引入的音节粘连或节拍机械重复。
+
+🎯 未检测到可疑合成模型特征模式：系统未匹配到训练集中与该样本特征相似的已知伪造模型（如 WORLD、MelGAN、WaveNet）输出模式，未触发伪音归因机制，说明其来源不具合成器指纹。
+`;
+        } else {
+          if (audioStore.counter === 1) {
+            text.value = `该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于伪音高可信区间，表明该音频在多个声学维度存在显著异常结构，具备典型的合成音频特征。
+
+以下为核心分析要点：
+
+🔍 1. MFCC频谱能量异常堆积
+
+在MFCC特征图中，尤其是第2–7倒谱系数区域，可观察到低频能量分布异常集中（蓝色区块明显加深），且整体频谱在时间轴方向呈现出均质化、缺乏自然过渡的特征，特别是在0–2000Hz频段内能量分层现象明显。这种现象通常与伪造语音使用固定滤波器组解码输出有关，缺乏真实声道动态建模。
+
+⏱ 2. 波形起伏规律性过强，缺乏自然扰动
+
+从波形图观察，该音频在时域振幅变化上呈现出强烈的节奏性和重复性，多个声波包络幅度、周期较为一致，缺乏人类自然语音中由情绪、语义驱动产生的微小波动。这种现象通常由合成器（如WaveGAN、MelGAN）生成过程中解码模块稳定输出导致，表明缺乏自然生成的复杂声源变化。
+
+🎤 3. Δ与ΔΔ特征波动微弱，动态特性受限
+
+进一步分析一阶差分（Δ）与二阶差分（ΔΔ）MFCC特征，可以推测该音频在时间连续性上缺乏自然语速波动，帧间频谱梯度变化小，整体抖动轨迹平滑而僵硬，反映出其在模拟声道动态张力与发声过程微扰方面存在显著不足，是典型的合成语音动态失稳特征。
+
+🧠 综合推断与归因
+
+结合频谱能量堆积异常、时域节奏规律性过强、动态特性缺失等综合判据，系统推断该音频极可能由基于MelGAN结构或同类轻量声码器合成生成。建议在实际应用中对此样本采取进一步反向验证措施，如声纹匹配与上下文一致性检测，避免因合成语音伪装产生误判风险。`;
+            audioStore.counter++;
+          } else {
+            text.value = `
 该音频经系统识别模型判定为伪造语音样本，得分为${score.value}，处于中等偏高的伪音可信区间，表明该音频在多个关键声学维度存在异常信号结构，具备典型的合成语音特征。
 
 以下为核心分析要点：
@@ -7190,28 +7304,43 @@ ${i3}
 
 进一步分析 Δ（动态变化）与 ΔΔ（加速度）维度的MFCC 通道发现，音频整体在帧间的能量梯度变化较弱，呈现出异常一致的频谱抖动轨迹，缺乏说话人自然发声过程中的肌肉张力变化和语调变化。这表明其在模拟声纹个体性方面存在明显缺失，是合成语音对“伪说话人”建模能力有限的信号。
 
-🧠 4. 综合推断与归因:
+🧠 综合推断与归因:
 
 结合频谱包络异常、节奏规则性增强、声纹建模不足等多维特征，系统推断该音频具有明显的合成音频特征，极可能由 基于 MelGAN 架构的语音合成器生成。建议在后续使用中对该样本进行上下文关联分析，并结合伪音来源库进行进一步溯源归属判断。
 `;
+          }
+        }
+        formatAppLog("log", "at pages/load/load.vue:247", "1111111111111");
+        formatAppLog("log", "at pages/load/load.vue:248", audioStore.audioPath);
+        const fileTitle = audioStore.audioTitle;
+        const filePath = audioStore.audioPath;
+        formatAppLog("log", "at pages/load/load.vue:251", "2222222222222");
+        audioList.value = [
+          {
+            title: fileTitle,
+            fileUrl: filePath
+          }
+        ];
+        mfccUrl.value = audioStore.waveImgPath;
+        waveUrl.value = audioStore.mfccImgPath;
+        score.value = audioStore.score;
       });
       vue.onBeforeUnmount(() => {
         clearInterval(timer);
       });
-      const __returned__ = { title, description, lemonjkFileSelect, score, isShowDetail, showCursor, text, displayText, index, interval, get timer() {
+      const __returned__ = { title, description, lemonjkFileSelect, isReal, resultContent, audioStore, score, isShowDetail, showCursor, mfccUrl, waveUrl, text, displayText, index, interval, get timer() {
         return timer;
       }, set timer(v2) {
         timer = v2;
-      }, startTypewriter, chartData, opts, gotoLoadPage, getServerData, showDetail, goBack, ref: vue.ref, onMounted: vue.onMounted, onBeforeUnmount: vue.onBeforeUnmount, get useAudioStore() {
+      }, startTypewriter, audioActiveIndex, audioList, onOpenAudioList, onAudioChange, onAudioEnd, onPlayProgress, chartData, opts, gotoLoadPage, getServerData, showDetail, goBack, ref: vue.ref, onMounted: vue.onMounted, onBeforeUnmount: vue.onBeforeUnmount, get useAudioStore() {
         return useAudioStore;
-      } };
+      }, LeAudio };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
   };
   function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_le_audio = resolveEasycom(vue.resolveDynamicComponent("le-audio"), __easycom_0$1);
-    const _component_qiun_data_charts = resolveEasycom(vue.resolveDynamicComponent("qiun-data-charts"), __easycom_1);
+    const _component_qiun_data_charts = resolveEasycom(vue.resolveDynamicComponent("qiun-data-charts"), __easycom_0);
     return vue.openBlock(), vue.createElementBlock("view", { class: "bg" }, [
       vue.withDirectives(vue.createElementVNode(
         "view",
@@ -7219,15 +7348,25 @@ ${i3}
         [
           vue.createElementVNode("view", { class: "promptUp" }, [
             vue.createElementVNode("view", { class: "promptTitle" }, [
-              vue.createElementVNode("image", {
+              $setup.isReal ? (vue.openBlock(), vue.createElementBlock("image", {
+                key: 0,
                 src: _imports_0$1,
                 mode: "",
                 class: "promptLogo"
-              }),
-              vue.createTextVNode(" 伪造音频 ")
+              })) : (vue.openBlock(), vue.createElementBlock("image", {
+                key: 1,
+                src: _imports_1$1,
+                mode: "",
+                class: "promptLogo"
+              })),
+              vue.createTextVNode(
+                " " + vue.toDisplayString($setup.resultContent),
+                1
+                /* TEXT */
+              )
             ]),
             vue.createElementVNode("image", {
-              src: _imports_1$1,
+              src: _imports_2,
               mode: "scaleToFill",
               class: "bookLogo"
             })
@@ -7278,18 +7417,18 @@ ${i3}
               /* TEXT */
             )
           ]),
-          vue.createVNode(_component_le_audio, {
-            activeIndex: _ctx.audioActiveIndex,
-            audioData: _ctx.audioList,
-            autoplay: true,
-            loopPlay: true,
+          vue.createVNode($setup["LeAudio"], {
+            activeIndex: $setup.audioActiveIndex,
+            audioData: $setup.audioList,
+            autoplay: false,
+            loopPlay: false,
             showAudioListIcon: false,
             showAudioSpeedIcon: true,
-            onOnOpenAudioList: _ctx.onOpenAudioList,
-            onOnAudioChange: _ctx.onAudioChange,
-            onOnAudioEnd: _ctx.onAudioEnd,
-            onOnPlayProgress: _ctx.onPlayProgress
-          }, null, 8, ["activeIndex", "audioData", "onOnOpenAudioList", "onOnAudioChange", "onOnAudioEnd", "onOnPlayProgress"])
+            onOnOpenAudioList: $setup.onOpenAudioList,
+            onOnAudioChange: $setup.onAudioChange,
+            onOnAudioEnd: $setup.onAudioEnd,
+            onOnPlayProgress: $setup.onPlayProgress
+          }, null, 8, ["activeIndex", "audioData"])
         ])
       ]),
       vue.createElementVNode("view", { class: "main" }, [
@@ -7303,7 +7442,15 @@ ${i3}
         vue.createElementVNode("view", { class: "result" }, [
           vue.createElementVNode("view", { class: "resultText" }, [
             vue.createTextVNode(" 经分析，该音频为 "),
-            vue.createElementVNode("text", { class: "resultBrief" }, " 伪造音频 ")
+            vue.createElementVNode(
+              "text",
+              {
+                class: vue.normalizeClass(["resultBrief", { "red": !$setup.isReal }])
+              },
+              vue.toDisplayString($setup.resultContent),
+              3
+              /* TEXT, CLASS */
+            )
           ]),
           vue.createElementVNode("view", {
             class: "resultDetail",
@@ -7313,23 +7460,23 @@ ${i3}
         vue.createElementVNode("view", { class: "todo" }, [
           vue.createElementVNode("view", { class: "title" }, "音频波形图"),
           vue.createElementVNode("image", {
-            src: _imports_2,
+            src: $setup.mfccUrl,
             mode: "",
             class: "mfcc"
-          }),
+          }, null, 8, ["src"]),
           vue.createElementVNode("view", { class: "title" }, "MFCC特征图"),
           vue.createElementVNode("image", {
-            src: _imports_3,
+            src: $setup.waveUrl,
             mode: "",
             class: "freq"
-          })
+          }, null, 8, ["src"])
         ]),
         vue.createElementVNode("button", {
           class: "uploadBtn",
           onClick: $setup.gotoLoadPage
         }, [
           vue.createElementVNode("image", {
-            src: _imports_4,
+            src: _imports_3,
             mode: "",
             class: "addImg"
           })
@@ -7338,10 +7485,591 @@ ${i3}
     ]);
   }
   const PagesLoadLoad = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-f4b8df5c"], ["__file", "E:/Code/Project/cccc_DiTing/pages/load/load.vue"]]);
+  const audioHistory = [
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [],
+    [],
+    [],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "伪造音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        // audioPath: '/mock/audio/20231001.mp3',
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "21:55",
+        wavePath: "/mock/audio/20231002.wav",
+        mfccPath: "/mock/audio/20231002.mfcc",
+        result: "真实音频",
+        score: 85
+      },
+      {
+        time: "22:00",
+        audioPath: "/mock/audio/20231003.mp3",
+        result: "伪造音频",
+        score: 37
+      }
+    ],
+    [
+      {
+        time: "08:05",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/audio.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/mfcc.png",
+        result: "伪造音频",
+        score: 12
+      },
+      {
+        time: "09:55",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/audio.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/mfcc.png",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "11:42",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/mfcc.png",
+        result: "伪造音频",
+        score: 25
+      }
+    ],
+    [
+      {
+        time: "20:54",
+        wavePath: "/mock/audio/20231001.wav",
+        mfccPath: "/mock/audio/20231001.mfcc",
+        result: "真实音频",
+        score: 95
+      }
+    ],
+    [
+      {
+        time: "21:54",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/mfcc.png",
+        result: "伪造音频",
+        score: 12
+      },
+      {
+        time: "21:55",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/audio.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/mfcc.png",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "22:00",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/mfcc.png",
+        result: "伪造音频",
+        score: 25
+      }
+    ],
+    [
+      {
+        time: "00:17",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/2/mfcc.png",
+        result: "伪造音频",
+        score: 25
+      },
+      {
+        time: "00:38",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/4/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/4/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/4/mfcc.png",
+        result: "伪造音频",
+        score: 37
+      },
+      {
+        time: "10:16",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/audio.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/mfcc.png",
+        result: "真实音频",
+        score: 95
+      },
+      {
+        time: "10:17",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.m4a",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/mfcc.png",
+        result: "伪造音频",
+        score: 12
+      },
+      {
+        time: "10:18",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/fake_leijun/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/fake_leijun/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/fake_leijun/mfcc.png",
+        result: "伪造音频",
+        score: 17
+      },
+      {
+        time: "10:19",
+        audioPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/real_leijun/audio.wav",
+        wavePath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/real_leijun/wave.png",
+        mfccPath: "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/real_leijun/mfcc.png",
+        result: "真实音频",
+        score: 89
+      }
+    ]
+  ];
   const _sfc_main$3 = {
     __name: "history",
     setup(__props, { expose: __expose }) {
       __expose();
+      const curIndex = vue.ref(27);
+      const cardIndex = vue.ref(0);
+      const audioHistoryData = vue.ref(audioHistory);
+      const audioStore = useAudioStore();
       const curYear = vue.ref("");
       const curMonth = vue.ref("");
       const curDay = vue.ref("");
@@ -7378,19 +8106,51 @@ ${i3}
       };
       const selectBox = (box, index) => {
         activeIndex.value = index;
-        formatAppLog("log", "at pages/history/history.vue:44", "index", index);
-        formatAppLog("log", "at pages/history/history.vue:45", "activeIndex value", activeIndex.value);
+        formatAppLog("log", "at pages/history/history.vue:52", "index", index);
+        formatAppLog("log", "at pages/history/history.vue:53", "activeIndex value", activeIndex.value);
         curDay.value = box.day;
         curDayOfWeek.value = box.dayOfWeek;
         curMonth.value = box.month;
         curYear.value = box.year;
+        curIndex.value = index;
+        cardIndex.value = 0;
+      };
+      const chooseCard = (item, index) => {
+        formatAppLog("log", "at pages/history/history.vue:63", "/////////////////////");
+        formatAppLog("log", "at pages/history/history.vue:64", "item", item);
+        formatAppLog("log", "at pages/history/history.vue:65", "/////////////////////");
+        cardIndex.value = index;
+        formatAppLog("log", "at pages/history/history.vue:68", "cardIndex", cardIndex.value);
+        audioStore.mfccImgPath = item.mfccPath;
+        audioStore.waveImgPath = item.wavePath;
+        audioStore.result = item.result;
+        audioStore.score = item.score;
+      };
+      const gotoLoadPage = (item, index) => {
+        audioStore.mfccImgPath = item.mfccPath;
+        audioStore.waveImgPath = item.wavePath;
+        audioStore.audioPath = item.audioPath;
+        audioStore.result = item.result;
+        audioStore.score = item.score;
+        uni.navigateTo({
+          url: "/pages/load/load",
+          animationType: "slide-in-right",
+          // 设置动画类型为从底部滑入
+          animationDuration: 300
+          // 设置动画时长为300ms
+        });
       };
       vue.onMounted(() => {
         generateBoxes();
         activeIndex.value = 27;
+        curIndex.value = 27;
         toView.value = "box27";
       });
-      const __returned__ = { curYear, curMonth, curDay, curDayOfWeek, dateBox, activeIndex, toView, currentDate, weekdays, up, yearMons, generateBoxes, selectBox, ref: vue.ref, onMounted: vue.onMounted, computed: vue.computed };
+      const __returned__ = { curIndex, cardIndex, audioHistoryData, audioStore, curYear, curMonth, curDay, curDayOfWeek, dateBox, activeIndex, toView, currentDate, weekdays, up, yearMons, generateBoxes, selectBox, chooseCard, gotoLoadPage, ref: vue.ref, onMounted: vue.onMounted, get audioHistory() {
+        return audioHistory;
+      }, get useAudioStore() {
+        return useAudioStore;
+      } };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
@@ -7497,44 +8257,42 @@ ${i3}
         ]),
         vue.createElementVNode("view", { class: "content" }, [
           vue.createElementVNode("view", { class: "verticalLine" }),
-          vue.createElementVNode("view", { class: "info" }, [
-            vue.createElementVNode("view", { class: "infoTime" }, " 21:34 "),
-            vue.createElementVNode("view", {
-              class: "card",
-              style: { "background-color": "#B0A4FD" }
-            }, [
-              vue.createElementVNode("view", { class: "judge" }, "真实音频"),
-              vue.createElementVNode("view", { class: "detail" }, "查看详情>")
-            ])
-          ]),
-          vue.createElementVNode("view", { class: "info" }, [
-            vue.createElementVNode("view", { class: "infoTime" }, " 21:34 "),
-            vue.createElementVNode("view", { class: "card" }, [
-              vue.createElementVNode("view", { class: "judge" }, "真实音频"),
-              vue.createElementVNode("view", { class: "detail" }, "查看详情>")
-            ])
-          ]),
-          vue.createElementVNode("view", { class: "info" }, [
-            vue.createElementVNode("view", { class: "infoTime" }, " 21:34 "),
-            vue.createElementVNode("view", { class: "card" }, [
-              vue.createElementVNode("view", { class: "judge" }, "真实音频"),
-              vue.createElementVNode("view", { class: "detail" }, "查看详情>")
-            ])
-          ]),
-          vue.createElementVNode("view", { class: "info" }, [
-            vue.createElementVNode("view", { class: "infoTime" }, " 21:34 "),
-            vue.createElementVNode("view", { class: "card" }, [
-              vue.createElementVNode("view", { class: "judge" }, "真实音频"),
-              vue.createElementVNode("view", { class: "detail" }, "查看详情>")
-            ])
-          ]),
-          vue.createElementVNode("view", { class: "info" }, [
-            vue.createElementVNode("view", { class: "infoTime" }, " 21:34 "),
-            vue.createElementVNode("view", { class: "card" }, [
-              vue.createElementVNode("view", { class: "judge" }, "真实音频"),
-              vue.createElementVNode("view", { class: "detail" }, "查看详情>")
-            ])
-          ])
+          (vue.openBlock(true), vue.createElementBlock(
+            vue.Fragment,
+            null,
+            vue.renderList($setup.audioHistoryData[$setup.curIndex], (item, index) => {
+              return vue.openBlock(), vue.createElementBlock("view", {
+                class: "info",
+                key: index
+              }, [
+                vue.createElementVNode(
+                  "view",
+                  { class: "infoTime" },
+                  vue.toDisplayString(item.time),
+                  1
+                  /* TEXT */
+                ),
+                vue.createElementVNode("view", {
+                  class: vue.normalizeClass(["card", { "active": $setup.cardIndex === index }]),
+                  onClick: ($event) => $setup.chooseCard(item, index)
+                }, [
+                  vue.createElementVNode(
+                    "view",
+                    { class: "judge" },
+                    vue.toDisplayString(item.result),
+                    1
+                    /* TEXT */
+                  ),
+                  vue.createElementVNode("view", {
+                    class: "detail",
+                    onClick: ($event) => $setup.gotoLoadPage(item, index)
+                  }, "查看详情>", 8, ["onClick"])
+                ], 10, ["onClick"])
+              ]);
+            }),
+            128
+            /* KEYED_FRAGMENT */
+          ))
         ])
       ])
     ]);
@@ -7616,22 +8374,51 @@ ${i3}
     __name: "listen",
     setup(__props, { expose: __expose }) {
       __expose();
+      const audioStore = useAudioStore();
       const isPaused = vue.ref(false);
       const promptDisplay = vue.ref(false);
       const recorderManager = uni.getRecorderManager();
-      const innerAudioContext2 = uni.createInnerAudioContext();
       const startRecord = () => {
         recorderManager.start();
       };
+      recorderManager.onStart(() => {
+        formatAppLog("log", "at pages/listen/listen.vue:60", "recorder start =========");
+        isPaused.value = false;
+      });
+      recorderManager.start();
+      recorderManager.onStop(() => {
+        formatAppLog("log", "at pages/listen/listen.vue:67", "recoder end ==========");
+      });
       const endRecord = () => {
-        isPaused.value = true;
         recorderManager.stop();
+        recorderManager.onStop(() => {
+          formatAppLog("log", "at pages/listen/listen.vue:75", "recoder end ==========");
+        });
+        isPaused.value = true;
         promptDisplay.value = true;
       };
       vue.onMounted(() => {
-        startRecord();
+        recorderManager.onError((res) => {
+          formatAppLog("log", "at pages/listen/listen.vue:90", res);
+          formatAppLog("log", "at pages/listen/listen.vue:91", "recorder error");
+        });
       });
       const gotoLoadPage = () => {
+        formatAppLog("log", "at pages/listen/listen.vue:102", "gotoLoadPage");
+        if (audioStore.counter > 0) {
+          audioStore.audioPath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.m4a";
+          audioStore.mfccPath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/wave.png";
+          audioStore.wavePath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/0/mfcc.png";
+          audioStore.result = "伪造音频";
+          audioStore.score = 12;
+        } else {
+          audioStore.audioPath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/audio.m4a";
+          audioStore.mfccPath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/wave.png";
+          audioStore.wavePath = "/storage/emulated/0/Android/data/uni.UNI84A00C0/cache/1/mfcc.png";
+          audioStore.result = "真实音频";
+          audioStore.score = 95;
+        }
+        audioStore.counter++;
         uni.navigateTo({
           url: "/pages/load/load",
           animationType: "slide-in-right",
@@ -7640,7 +8427,9 @@ ${i3}
           // 设置动画时长为300ms
         });
       };
-      const __returned__ = { isPaused, promptDisplay, recorderManager, innerAudioContext: innerAudioContext2, startRecord, endRecord, gotoLoadPage, onMounted: vue.onMounted, ref: vue.ref, TimeCounterVue };
+      const __returned__ = { audioStore, isPaused, promptDisplay, recorderManager, startRecord, endRecord, gotoLoadPage, onMounted: vue.onMounted, ref: vue.ref, TimeCounterVue, get useAudioStore() {
+        return useAudioStore;
+      } };
       Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
       return __returned__;
     }
